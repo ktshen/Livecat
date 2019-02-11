@@ -136,7 +136,7 @@ exports.get_host = function(req, res) {
                                         hostListArr = redisMsg;
                                         console.log("[HOST_LIST]\n " + hostListArr);
 
-                                        res.render( 'index', {
+                                        res.render( 'general', {
                                             title : 'Live stream',
                                             baseurl : req.path,
                                             choices : hostListArr,
@@ -287,7 +287,7 @@ exports.get_category = function(req, res) {
                                 platformListArr = redisMsg;
                                 console.log("[PLATFORM_LIST]\n " + platformListArr);
 
-                                res.render( 'index', {
+                                res.render( 'general', {
                                     title : 'Live stream',
                                     choices : platformListArr,
                                     baseurl : req.path,
@@ -362,7 +362,7 @@ exports.get_host_filted_list = function(req, res) {
                         pageNum = parseInt(redisMsg/dataPerPage +1);  // number of pagination
                         console.log("[PAGE NUM]\n " + pageNum);
 
-                            res.render( 'index', {
+                            res.render( 'general', {
                                 title : 'Live stream',
                                 choices : "",
                                 baseurl : req.path,
@@ -434,7 +434,7 @@ exports.get_platform_filted_list = function(req, res) {
                         pageNum = parseInt(redisMsg/dataPerPage +1);
                         console.log("[PAGE NUM]\n " + pageNum);  // number of pagination
 
-                            res.render( 'index', {
+                            res.render( 'general', {
                                 title : 'Live stream',
                                 choices : "",
                                 baseurl : req.path,
@@ -506,7 +506,7 @@ exports.get_category_filted_list = function(req, res) {
                         pageNum = parseInt(redisMsg/dataPerPage +1);
                         console.log("[PAGE NUM]\n " + pageNum);  // number of pagination
 
-                            res.render( 'index', {
+                            res.render( 'general', {
                                 title : 'Live stream',
                                 choices : "",
                                 baseurl : req.path,
