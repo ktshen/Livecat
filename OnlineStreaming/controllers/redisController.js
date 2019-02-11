@@ -53,7 +53,11 @@ exports.get_home = function(req, res) {
                     filterListArr = redisMsgArr;
                     // set page navigation
                     Promise.resolve(dataNum).then(function(redisMsg){
-                        pageNum = parseInt(redisMsg/dataPerPage +1); // number of pagination
+                        if(redisMsg%dataPerPage == 0){
+                            pageNum = parseInt(redisMsg/dataPerPage); // number of pagination
+                        }else{
+                            pageNum = parseInt(redisMsg/dataPerPage +1); // number of pagination
+                        }
                         console.log("[PAGE NUM] " + pageNum);
 
                         res.render( 'index', {
@@ -130,7 +134,11 @@ exports.get_host = function(req, res) {
                                 filterListArr = redisMsgArr;
                                 // set page navigation
                                 Promise.resolve(dataNum).then(function(redisMsg){
-                                    pageNum = parseInt(redisMsg/dataPerPage +1); // number of pagination
+                                    if(redisMsg%dataPerPage == 0){
+                                        pageNum = parseInt(redisMsg/dataPerPage); // number of pagination
+                                    }else{
+                                        pageNum = parseInt(redisMsg/dataPerPage +1); // number of pagination
+                                    }
                                     console.log("[PAGE NUM]\n " + pageNum);
                                     Promise.resolve(hostList).then(function(redisMsg){
                                         hostListArr = redisMsg;
@@ -281,7 +289,11 @@ exports.get_category = function(req, res) {
                         filterListArr = redisMsgArr;
                         // set page navigation
                         Promise.resolve(dataNum).then(function(redisMsg){
-                            pageNum = parseInt(redisMsg/dataPerPage +1);  // number of pagination
+                            if(redisMsg%dataPerPage == 0){
+                                pageNum = parseInt(redisMsg/dataPerPage); // number of pagination
+                            }else{
+                                pageNum = parseInt(redisMsg/dataPerPage +1); // number of pagination
+                            }
                             console.log("[PAGE NUM]\n " + pageNum);
                             Promise.resolve(platformList).then(function(redisMsg){
                                 platformListArr = redisMsg;
@@ -359,7 +371,11 @@ exports.get_host_filted_list = function(req, res) {
                     filterListArr = redisMsgArr;
                     // set page navigation
                     Promise.resolve(dataNum).then(function(redisMsg){
-                        pageNum = parseInt(redisMsg/dataPerPage +1);  // number of pagination
+                        if(redisMsg%dataPerPage == 0){
+                            pageNum = parseInt(redisMsg/dataPerPage); // number of pagination
+                        }else{
+                            pageNum = parseInt(redisMsg/dataPerPage +1); // number of pagination
+                        }
                         console.log("[PAGE NUM]\n " + pageNum);
 
                             res.render( 'general', {
@@ -431,7 +447,11 @@ exports.get_platform_filted_list = function(req, res) {
                     filterListArr = redisMsgArr;
                     // set page navigation
                     Promise.resolve(dataNum).then(function(redisMsg){
-                        pageNum = parseInt(redisMsg/dataPerPage +1);
+                        if(redisMsg%dataPerPage == 0){
+                            pageNum = parseInt(redisMsg/dataPerPage); // number of pagination
+                        }else{
+                            pageNum = parseInt(redisMsg/dataPerPage +1); // number of pagination
+                        }
                         console.log("[PAGE NUM]\n " + pageNum);  // number of pagination
 
                             res.render( 'general', {
@@ -503,7 +523,11 @@ exports.get_category_filted_list = function(req, res) {
                     filterListArr = redisMsgArr;
                     // set page navigation
                     Promise.resolve(dataNum).then(function(redisMsg){
-                        pageNum = parseInt(redisMsg/dataPerPage +1);
+                        if(redisMsg%dataPerPage == 0){
+                            pageNum = parseInt(redisMsg/dataPerPage); // number of pagination
+                        }else{
+                            pageNum = parseInt(redisMsg/dataPerPage +1); // number of pagination
+                        }
                         console.log("[PAGE NUM]\n " + pageNum);  // number of pagination
 
                             res.render( 'general', {
