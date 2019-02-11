@@ -1,0 +1,14 @@
+<div class="collapse navbar-collapse" id="navbarCollapse">
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Filter
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <% filter.forEach(function(filt, index) {%>
+                <a class="dropdown-item" href="/<%= filt %>"><%= filt %></a>
+            <%}) %>
+        </div>
+    </li>
+  </ul>
+</div>

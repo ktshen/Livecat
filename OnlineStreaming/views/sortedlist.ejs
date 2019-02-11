@@ -1,0 +1,31 @@
+<% if (stream.length == 0 ) { %>
+    <h2> No results </h2>
+<% } else { %>
+    <% subtitles.forEach(function(subtitle, index) {%>
+        <br/>
+        <h2> <%= subtitle %></h2>
+        <hr class="featurette-divider">
+
+        <div class="row">
+        <% stream.forEach(function(post, index) {%>
+            <% if (post == 0 ) {return;}%>
+            <div class="col-lg-3">
+             <img class="rounded mx-auto" src="<%= post.Photo %>" alt="Generic placeholder image" width="260s" height="150">
+              <h3><%= post.Host %></h3>
+              <p>Platform: <%= post.Platform %>
+                  <br/>
+                  Category: <%= post.Category %>
+                  <br/>
+                  People watching: <%= post.Views %>
+                  <br/>
+                  Start time: <%= post.Time %></p>
+              <p class="text-right">
+                  <a class="btn btn-secondary" href="<%= post.Link %>" role="button">View &raquo;</a>
+              </p>
+              <!-- <br/> -->
+              <hr class="featurette-divider">
+            </div>
+        <%}) %>
+        </div><!-- /.row -->
+    <%}) %>
+<% } %>

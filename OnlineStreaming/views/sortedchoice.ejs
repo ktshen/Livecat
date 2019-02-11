@@ -1,0 +1,6 @@
+<% if (subtitles.length == 0 ) { %>
+<% } else { %>
+    <% subtitles.forEach(function(host, index) {%>
+        <a class="btn btn-light"role="button" href="<%= baseurl %>/<%= host %>"><%= host %></a>
+    <%}) %>
+<% } %>
