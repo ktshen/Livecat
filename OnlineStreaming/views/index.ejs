@@ -31,8 +31,7 @@
             <br>
             <br>
             <!-- carousel only works while data > 3 -->
-            <% if (posts.length < 3 ) { %>
-            <% } else { %>
+            <% if (posts.length > 3 || !currentPage || currentPage == 1 ) { %>
                 <div id="carouselExampleIndicators" class="carousel slide mx-auto" data-ride="carousel" style="width:100%">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -77,6 +76,8 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+            <% } else { %>
+
             <% } %>
             <br>
             <% include streamlist.ejs %>
