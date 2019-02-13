@@ -31,7 +31,7 @@
             <br>
             <br>
             <!-- carousel only works while data > 3 -->
-            <% if (posts.length > 3 || !currentPage || currentPage == 1 ) { %>
+            <% if ((posts.length > 3 && !currentPage) || currentPage == 1 ) { %>
                 <div id="carouselExampleIndicators" class="carousel slide mx-auto" data-ride="carousel" style="width:100%">
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -41,7 +41,7 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <a href="<%= posts[0].Link %>">
-                                <img src="<%= posts[2].Photo %>" class="d-block w-100">
+                                <img src="<%= posts[0].Photo %>" class="d-block w-100">
                             </a>
                             <div class="carousel-caption d-none d-md-block">
                                 <h5><%= posts[0].Host %></h5>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="carousel-item">
                             <a href="<%= posts[1].Link %>">
-                                <img src="<%= posts[2].Photo %>" class="d-block w-100">
+                                <img src="<%= posts[1].Photo %>" class="d-block w-100">
                             </a>
                             <div class="carousel-caption d-none d-md-block">
                                 <h5><%= posts[1].Host %></h5>
