@@ -19,7 +19,7 @@ type MongoDB struct {
 	Title            string
 	Description      string
 	Platform         string
-	VideoId          string
+	VideoID          string
 	Host             string
 	Status           string
 	Thumbnails       string

@@ -6,19 +6,21 @@ import (
 )
 
 func main() {
+	// go crawler.WatermelonInitial()
+	// go crawler.SeventeenInitial()
+	go crawler.YouTubeInitial()
 
-	freqYouTube := time.NewTicker(time.Minute * 10)
-	freqSeventeen := time.NewTicker(time.Minute * 10)
-	freqWatermelon := time.NewTicker(time.Minute * 10)
+	freqYouTube := time.NewTicker(time.Minute * 40)
+	// freqSeventeen := time.NewTicker(time.Minute * 10)
+	// freqWatermelon := time.NewTicker(time.Minute * 10)
 	for {
 		select {
-		case <-freqWatermelon.C:
-			go crawler.WatermelonInitial()
-		case <-freqSeventeen.C:
-			go crawler.SeventeenInitial()
+		// case <-freqWatermelon.C:
+		// go crawler.WatermelonInitial()
+		// case <-freqSeventeen.C:
+		// 	go crawler.SeventeenInitial()
 		case <-freqYouTube.C:
 			go crawler.YouTubeInitial()
 		}
 	}
-
 }
