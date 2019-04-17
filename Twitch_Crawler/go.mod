@@ -1,5 +1,7 @@
 module Twitch_Crawler
 
+go 1.12
+
 require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect

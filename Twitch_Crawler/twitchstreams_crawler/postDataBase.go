@@ -1,12 +1,12 @@
 package twitchstreams_crawler
 
 import (
+	"Twitch_Crawler/mongodbStruct"
+	"Twitch_Crawler/mongogogo"
 	"bytes"
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
-	"mongodbStruct"
-	"mongogogo"
 	"net/http"
 	"time"
 )
