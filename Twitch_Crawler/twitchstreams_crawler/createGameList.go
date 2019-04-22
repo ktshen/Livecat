@@ -11,15 +11,13 @@ import (
 )
 
 const (
-	GameURL       = "https://api.twitch.tv/helix/games/top"
-	GameArraySize = 1000000
+	GameURL = "https://api.twitch.tv/helix/games/top"
 	//TwitchFileJson = "Twitch.Json"
 )
 
 var (
-	gameName     = new(GameNameFileJson)
-	gameArray    [GameArraySize]Data2
-	arrayCounter = 0
+	gameName  = new(GameNameFileJson)
+	gameArray []Data2
 )
 
 func createFile(ListName string) os.File {
@@ -39,6 +37,8 @@ func WriteGameList(file os.File, gameInformation *GameNameFileJson) {
 
 func GetAllGameInformation() {
 	f := createFile(GameInformationJsonFile)
+	len := 0
+	gameArray = make([]Data2, len)
 	defer CloseFile(f)
 	fmt.Println("----> Initialize the game list. <----")
 	url := GameURL
@@ -47,15 +47,14 @@ func GetAllGameInformation() {
 	_, BeforeM := UpdateTime("checkM")
 	_, BeforeS := UpdateTime("checkS")
 
-	for i < 8000 {
+	for i < 400 {
 		fmt.Println("------->", i)
-		api := GetAPIClient(url)
+		api := GetAPIClient(url, SecondClient_ID)
 		var resp_decode GameNameJson
 		json.Unmarshal(api, &resp_decode)
 		for _, DATA := range resp_decode.DATA {
 			DATA = GameInformationJson(DATA)
-			gameArray[arrayCounter] = DATA
-			arrayCounter++
+			gameArray = append(gameArray, DATA)
 			//fmt.Println(DATA)
 		}
 		parameter := "?after=" + resp_decode.Pagination.Cursor

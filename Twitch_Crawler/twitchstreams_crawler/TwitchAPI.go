@@ -20,6 +20,7 @@ const (
 	STREAM_URL              = "https://api.twitch.tv/kraken/streams/"
 	Twitch_Url              = "https://www.twitch.tv/"                        //For generating the stream's URL
 	Client_ID               = "a63i69mhmzr6hdvxy3pthw8d2nrlc0"                //Client-ID for developing Twitch program
+	SecondClient_ID         = "kw1hxsbf7rc8fh8dojm6jjggy7p6zj"                //The second Client-ID for updating the gameInformation
 	Initialurl              = "https://api.twitch.tv/helix/streams?first=100" //For TwitchAPI function
 	AllUrl                  = "https://api.twitch.tv/kraken/streams/summary"  //For GetAllStreamsCount function
 	Embed                   = "https://player.twitch.tv/?channel="            //For generating embeddeed streams' URL
@@ -62,28 +63,31 @@ func PartialUpdate() {
 	url := Initialurl
 	for o := 0; o < 8; o++ {
 		time.Sleep(time.Minute * 5)
-		fmt.Printf("-------> Now start to partial update. <-------- %d times !!", o)
+		fmt.Printf("---> Now start partial update. <--- %d times !", o)
 		url = TwitchAPI(url, 15, "Update") //partial update for top 2,000 streams
 	}
 }
 
-func GetAPIClient(url string) []byte {
+func GetAPIClient(url string, client_id string) []byte {
 	client := &http.Client{
 		Timeout: time.Second * 10,
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	handleError(err, "")
-	req.Header.Add("Client-ID", Client_ID)
+	req.Header.Add("Client-ID", client_id)
 
 	resp, err := client.Do(req)
-	handleError(err, "Twitch API Client Do")
+	for err != nil {
+		time.Sleep(time.Second * 8)
+		resp, err = client.Do(req)
+	}
 	content, err := ioutil.ReadAll(resp.Body)
-	handleError(err, "")
+	handleError(err, "Read resp content")
 	return content
 }
 
 func GetAllStreamsCount() int {
-	api := GetAPIClient(AllUrl)
+	api := GetAPIClient(AllUrl, Client_ID)
 	var resp_decode Summary
 	json.Unmarshal(api, &resp_decode)
 	//fmt.Println(resp_decode.Channels)
@@ -105,7 +109,7 @@ func TwitchAPI(url string, ReqCount int, selectIndex string) string {
 			fmt.Printf("%10s    %3d   %3d\n", selectIndex, counter, ReqCount)
 		}
 		//fmt.Println(url)
-		api := GetAPIClient(url)
+		api := GetAPIClient(url, Client_ID)
 		var resp_decode TwitchJson
 		json.Unmarshal(api, &resp_decode)
 
@@ -218,19 +222,4 @@ func TwitchJsonToMongoJson(DATA Data) (mongodbStruct.MongoDB, mongodbStruct.Web)
 	streams.Timestamp = updateTime                               //Mongodb Timestamp
 	streams.CreatedAt = updateTime                               //Expire Data after 25 minutes from now
 	return *streams, *Web
-}
-
-func StreamOffLine() {
-	// doc, err := goquery.NewDocument("https://www.twitch.tv/nightblue3")
-	// handleError(err, "")
-	// doc.Find("div.shell-nav__link shell-nav__link--browse").Find("div.player-streamstatus").Each(func(i int, s *goquery.Selection) {
-	// 	fmt.Println("---->")
-	// 	status, exist := s.Find("span.player-tip").Attr("data-tip")
-	// 	fmt.Println(status, i)
-	// 	if exist {
-	// 		fmt.Println(status, i)
-	// 	} else {
-	// 		fmt.Println("Href dose not exist!!")
-	// 	}
-	// })
 }

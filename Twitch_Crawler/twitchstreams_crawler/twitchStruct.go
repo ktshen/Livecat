@@ -47,5 +47,5 @@ type Pagination2 struct {
 	Cursor string
 }
 type GameNameFileJson struct {
-	DATA [GameArraySize]Data2
+	DATA []Data2
 }
