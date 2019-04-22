@@ -2,6 +2,7 @@
 
 - [Prerequisite](#prerequisite)
 - [Build](#build)
+- [Run](#run)
 - [GoTest](#gotest)
   
 
@@ -9,7 +10,6 @@
 
 ### Install
 
-- cmake、gcc、g++ - build core library
 - [Go 1.12 version](https://golang.org/dl/) - build middleware
 
 ### Golang
@@ -24,7 +24,6 @@ export GOCACHE="/path/you/like/.cache/go-build"
 Use Go 1.11 or below, delete `go.sum`, otherwise it will result error in verifying checksum.
 
 ```sh
-cd src
 rm go.sum
 go get ./...
 ```
@@ -34,10 +33,27 @@ go get ./...
 Install dependency
 
 ```sh
-cd src
 go mod download
 ```
 
+Build
+
+```sh
+go build main.go
+```
+
+## Run
+
+Run on talnet 120.126.16.88
+
+```sh
+cd /home/user/crawler/livecat/crawler_livecat/program/youtube
+sudo ./youtube
+cd /home/user/crawler/livecat/crawler_livecat/program/watermelon
+sudo ./watermelon
+cd /home/user/crawler/livecat/crawler_livecat/program/seventeen
+sudo ./seventeen
+```
 
 ## GoTest
 
@@ -53,13 +69,11 @@ go install github.com/golang/mock/mockgen
 Generate
 
 ```sh
-cd src/
 go generate ./...
 ```
 
 ### Test
 
 ```sh
-cd src/
 go test ./...
 ```
