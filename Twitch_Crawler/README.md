@@ -32,8 +32,9 @@ Make sure you download the whole file completely.
 * Please update the game information at first, which will spend you some time.
 Please wait for it patiently. Then, it will create a Json file which contains about 10000
 pieces of game information data.
-
-    $ sudo ./TwitchCrawler Update
+```
+$ sudo ./TwitchCrawler Update
+```
 
 ## Run the main program
 
