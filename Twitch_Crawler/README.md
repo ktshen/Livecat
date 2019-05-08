@@ -12,9 +12,13 @@ This repository contains four packages to call the APIs.
 * You need Go version at least 1.12.x.
 
 If your os is `mac`, please try
-    $ export GOOS=darwin.
+```
+     $ export GOOS=darwin
+```
 If your os is `linux`, please try
-    $ export GOOS=linux
+```
+     $ export GOOS=linux
+```
 
 ## Build
 
