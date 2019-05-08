@@ -19,7 +19,7 @@ func main() {
 	// fmt.Println(argsWithoutProg)
 	// fmt.Println(arg)
 	length := len(os.Args)
-	//fmt.Println(argsWithProg, length)
+	fmt.Println(argsWithProg)
 	if length < 2 {
 		fmt.Printf("Your insert is ")
 		fmt.Printf("%s\n", argsWithProg)
