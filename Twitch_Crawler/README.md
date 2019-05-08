@@ -11,8 +11,8 @@ You need Go version at least `1.12.x`
 ## GOOS setting
 ----
 
-    If your os is `mac`, please try `$ export GOOS=darwin`
-    If your os is `linux`, please try `$ export GOOS=linux`
+If your os is `mac`, please try `$ export GOOS=darwin`
+If your os is `linux`, please try `$ export GOOS=linux`
 
 ## Build
 ----
@@ -31,3 +31,15 @@ pieces of game information data.
 ## Run the main program
 ----
     $ sudo ./TwitchCrawler Start
+
+After runnuing this program, you will see the output.
+It's like
+```
+Start process !
+Convert Json file into this crawler.
+Twitch Crawler is running ...
+   Initial      1   422
+   .
+   .
+   .
+```
