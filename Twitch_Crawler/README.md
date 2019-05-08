@@ -2,17 +2,16 @@
 
 This repository contains four packages to call the APIs.
 
-### Golang
-You need Go version at least `1.12.x`
-----
-* [Set GOOS](#goos-setting)
+* [Golang](#golang)
 * [Build the project](#build)
 * [Update the game infromation Json file](#update-the-json-file)
 * [Start the main program](#run-the-main-program)
 
-## GOOS setting
+## Golang
 
-If your os is `mac`, please try `$ export GOOS=darwin`
+* You need Go version at least 1.12.x.
+
+If your os is `mac`, please try `$ export GOOS=darwin`.
 If your os is `linux`, please try `$ export GOOS=linux`
 
 ## Build
