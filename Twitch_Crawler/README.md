@@ -22,6 +22,7 @@ Make sure you download the whole file completely.
 
 ## Update the Json file
 ----
+If you have had the Json file already, you can skip this step to [Start the main program](#run-the-main-program)
 Please update the game information at first, which will spend you some time.
 Please wait for it patiently. Then, it will create a Json file which contains about 10000
 pieces of game information data.
