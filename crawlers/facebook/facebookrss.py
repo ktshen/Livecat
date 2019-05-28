@@ -23,7 +23,7 @@ requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 DRIVER_PATH = "./chromedriver"
 GMAIL_EMAIL = "dlivecat@gmail.com"
-GMAIL_PASS = "aTerr#21p"
+GMAIL_PASS = "bTerr#21p"
 PUPPETEER_URL = "http://140.115.153.208:8080/material/png_Crawler"
 ELASTIC_CREATE_SERVER_URL = "http://120.126.16.88:17777/add"
 
@@ -68,7 +68,6 @@ class XMLCrawler(threading.Thread):
         published = datetime.datetime.strptime(it.find("pubDate").text, "%a, %d %b %Y %H:%M:%S +0000")
         if published < datetime.datetime.now() - datetime.timedelta(days=7):
             return False
-
         return True
 
     def get_title(self, title):
@@ -124,13 +123,14 @@ class XMLCrawler(threading.Thread):
         while not success and counter < 5:
             try:
                 resp = requests.get(self.url, cookies=self.cookies, verify=False)
-                self.root = ET.fromstring(resp.content)
+                self.root = ET.fromstring(resp.content.decode('utf-8'))
                 self.parse()
                 success = True
             except (RequestException, ET.ParseError) as e:
                 logfunc(self.url, e)
             except Exception as e:
                 logfunc(e)
+            time.sleep(1)
             counter += 1
 
 
@@ -251,12 +251,12 @@ class FacebookRssFetcher:
                 c = XMLCrawler(url, self.user_cookie)
                 c.start()
                 self.workers[url] = c
+                time.sleep(1)
 
             while len(self.workers):
                 for url in list(self.workers.keys()):
                     if not self.workers[url].is_alive():
                         self.workers.pop(url)
-            time.sleep(120)
 
     def run(self):
         self.load_cookies_from_file()
@@ -268,7 +268,10 @@ class FacebookRssFetcher:
                 try:
                     self.process_pages()
                 except (NotLoginStatusException, AttributeError):
-                    self.site_login()
+                    try:
+                        self.site_login()
+                    except Exception as e:
+                        raise e
         except KeyboardInterrupt:
             logfunc("Forced Stop.")
         except ValueError:

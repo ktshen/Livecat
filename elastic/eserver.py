@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 import time
-from dlivecat import logfunc, es_search, es_update, es
+from dlivecat import logfunc, es_search, es_update, es_count, es
 from elasticsearch import Elasticsearch
 from pyfasttext import FastText
 import re
@@ -434,3 +434,30 @@ def create_or_update_doc():
         print(e)
         abort(400)
     return 'ok'
+
+
+@app.route("/total_streams", methods=['GET'])
+def total_streams():
+    qs = get_parameters_from_url(request)
+    if not "platform" in qs:
+        abort(400)
+    body = {
+        "query": {
+            "bool" :{
+                "filter": [
+                    {"match_phrase": {"status": "live"}},
+                ],
+                "must": [
+                    {"match_phrase": {"platform": qs["platform"][0]}},
+                ]
+            }
+        }
+    }
+    response = es_count(body=body)
+    if not response:
+        abort(400)
+    return jsonify(response)
+
+@app.route("/hot_page", methods=['GET'])
+def top_viewers():
+    pass
