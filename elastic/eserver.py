@@ -286,8 +286,8 @@ def search():
     return jsonify(res)
 
 
-@app.route("/home_page", methods=['GET'])
-def get_home_page():
+@app.route("/platform_page", methods=['GET'])
+def get_platform_page():
     qs = get_parameters_from_url(request)
     if "size" in qs:
         size = qs["size"][0]

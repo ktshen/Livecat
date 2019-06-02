@@ -1,1 +1,4 @@
 .DS_Store
+user_cookie.txt
+compared*
+__pycache__/

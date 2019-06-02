@@ -21,10 +21,9 @@ from urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
-DRIVER_PATH = "./chromedriver"
+DRIVER_PATH = "../chromedriver"
 GMAIL_EMAIL = "dlivecat@gmail.com"
 GMAIL_PASS = "bTerr#21p"
-PUPPETEER_URL = "http://140.115.153.208:8080/material/png_Crawler"
 ELASTIC_CREATE_SERVER_URL = "http://120.126.16.88:17777/add"
 
 
