@@ -252,6 +252,7 @@ class FacebookRssFetcher:
             while len(self.workers):
                 for url in list(self.workers.keys()):
                     if not self.workers[url].is_alive():
+                        self.workers[url].join()
                         self.workers.pop(url)
 
     def run(self):
