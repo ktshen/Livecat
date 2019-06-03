@@ -458,6 +458,78 @@ def total_streams():
         abort(400)
     return jsonify(response)
 
+
 @app.route("/hot_page", methods=['GET'])
 def top_viewers():
-    pass
+    body = {
+        "size": 48,
+        "query": {
+            "bool": {
+                "filter": [
+                    {"match_phrase": {"status": "live"}},
+                ],
+            }
+        },
+        "sort" :[
+            {"viewers": {"order": "desc"}},
+            {"published": {"order": "desc"}},
+        ]
+    }
+    response = es_search(body=body)
+    if not response:
+        abort(400)
+    return jsonify(response)
+
+
+@app.route("/home_page", methods=['GET'])
+def home_page():
+    body = {
+        "from": 0,
+        "size": 30,
+        "query": {
+            "function_score": {
+                "query": {
+                    "bool": {
+                        "filter": [
+                            {"match_phrase": {"status": "live"}},
+                        ],
+                    }
+                },
+                "random_score": {
+                    "seed": str(int(time.mktime(datetime.now().timetuple()))),
+                    "field": "_seq_no"
+                },
+                "boost": "5",
+                "boost_mode": "replace"
+            }
+        }
+    }
+
+    results = es_search(body=body)
+
+    response = {"subscriptions": results["hits"]["hits"][0:4],  # Subscriptions
+                "upcoming": results["hits"]["hits"][4:5],       # Upcoming Stream
+                "recommended": results["hits"]["hits"][5:9],    # Recommended
+                "today": results["hits"]["hits"][9:13],
+                "within_72_hours": results["hits"]["hits"][13:17]}
+    # Most Viewed
+    body = {
+        "size": 10,
+        "query": {
+            "bool": {
+                "filter": [
+                    {"match_phrase": {"status": "live"}},
+                ],
+            }
+        },
+        "sort": [
+            {"viewers": {"order": "desc"}},
+            {"published": {"order": "desc"}},
+        ]
+    }
+    results = es_search(body=body)
+    response["most_viewed"] = results["hits"]["hits"][0:4]
+    # Hot
+    response["hot"] = results["hits"]["hits"][4:8]
+
+    return jsonify(response)

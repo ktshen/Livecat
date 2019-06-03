@@ -16,9 +16,6 @@ from selenium.webdriver.chrome.options import Options
 import xml.etree.ElementTree as ET
 from urllib3.exceptions import InsecureRequestWarning
 
-
-
-
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
 DRIVER_PATH = "../chromedriver"
@@ -48,10 +45,10 @@ class XMLCrawler(threading.Thread):
 
     def store(self, data):
         try:
-            resp = requests.post(ELASTIC_CREATE_SERVER_URL, data=data)
+            resp = requests.post(ELASTIC_CREATE_SERVER_URL, data=data, timeout=30)
             logfunc("POST", "status:"+data["status"], data["title"], resp)
         except Exception as e:
-            print(e)
+            logfunc(e)
 
     def validate(self, it):
         _title = it.find("title")
@@ -82,7 +79,7 @@ class XMLCrawler(threading.Thread):
 
     def test_video_live_status(self, url):
         try:
-            r = requests.get(url)
+            r = requests.get(url, timeout=30)
         except Exception as e:
             logfunc(url, e)
             return 'live'
@@ -121,7 +118,7 @@ class XMLCrawler(threading.Thread):
         counter = 0
         while not success and counter < 5:
             try:
-                resp = requests.get(self.url, cookies=self.cookies, verify=False)
+                resp = requests.get(self.url, cookies=self.cookies, verify=False, timeout=30)
                 self.root = ET.fromstring(resp.content.decode('utf-8'))
                 self.parse()
                 success = True
