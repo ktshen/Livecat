@@ -1,0 +1,50 @@
+2019/05/16 11:34:03 START [西瓜直播]
+2019/05/16 11:34:31 END [西瓜直播]
+2019/05/16 11:44:03 START [西瓜直播]
+2019/05/16 11:44:31 END [西瓜直播]
+2019/05/16 11:54:03 START [西瓜直播]
+2019/05/16 11:54:32 END [西瓜直播]
+2019/05/16 12:04:03 START [西瓜直播]
+2019/05/16 12:04:30 END [西瓜直播]
+2019/05/16 12:14:03 START [西瓜直播]
+2019/05/16 12:14:30 END [西瓜直播]
+2019/05/16 12:24:03 START [西瓜直播]
+2019/05/16 12:24:32 END [西瓜直播]
+2019/05/16 12:34:03 START [西瓜直播]
+2019/05/16 12:34:30 END [西瓜直播]
+2019/05/16 12:44:03 START [西瓜直播]
+2019/05/16 12:44:30 END [西瓜直播]
+2019/05/16 12:54:03 START [西瓜直播]
+2019/05/16 12:54:30 END [西瓜直播]
+2019/05/16 13:04:03 START [西瓜直播]
+2019/05/16 13:04:31 END [西瓜直播]
+2019/05/16 13:14:03 START [西瓜直播]
+2019/05/16 13:14:30 END [西瓜直播]
+2019/05/16 13:24:03 START [西瓜直播]
+2019/05/16 13:24:30 END [西瓜直播]
+2019/05/16 13:34:03 START [西瓜直播]
+2019/05/16 13:34:29 END [西瓜直播]
+2019/05/16 13:44:03 START [西瓜直播]
+2019/05/16 13:44:30 END [西瓜直播]
+2019/05/16 13:54:03 START [西瓜直播]
+2019/05/16 13:54:30 END [西瓜直播]
+2019/05/16 14:04:03 START [西瓜直播]
+2019/05/16 14:04:31 END [西瓜直播]
+2019/05/16 14:14:03 START [西瓜直播]
+2019/05/16 14:14:30 END [西瓜直播]
+2019/05/16 14:24:03 START [西瓜直播]
+2019/05/16 14:24:30 END [西瓜直播]
+2019/05/16 14:34:03 START [西瓜直播]
+panic: no such element: no such element: Unable to locate element: {"method":"css selector","selector":"div.Feed-footer"}
+  (Session info: headless chrome=73.0.3683.86)
+  (Driver info: chromedriver=73.0.3683.20 (8e2b610813e167eee3619ac4ce6e42e3ec622017),platform=Linux 4.15.0-47-generic x86_64)
+
+goroutine 10694 [running]:
+crawler_livecat/crawler.getWatermelonDoc(0x8016e0, 0xc000158120, 0x7926f7, 0x26, 0x0)
+	/home/jeff/Desktop/jeff/git/livecat/crawler_livecat/crawler/crawlerWatermelon.go:43 +0x2b8
+crawler_livecat/crawler.crawlerWatermelon(0x7926f7, 0x26)
+	/home/jeff/Desktop/jeff/git/livecat/crawler_livecat/crawler/crawlerWatermelon.go:33 +0x103
+crawler_livecat/crawler.WatermelonInitial()
+	/home/jeff/Desktop/jeff/git/livecat/crawler_livecat/crawler/crawlerWatermelon.go:18 +0x7a
+created by main.main
+	/home/jeff/Desktop/jeff/git/livecat/crawler_livecat/main.go:32 +0x82

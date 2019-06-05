@@ -10,6 +10,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/tebeka/selenium"
+	"gopkg.in/mgo.v2"
 )
 
 // WatermelonInitial ...
@@ -43,36 +44,37 @@ func getWatermelonDoc(wd selenium.WebDriver, url string) (doc *goquery.Document)
 	time.Sleep(3 * time.Second)
 	var frameHTML string
 	frameHTML, err = wd.PageSource()
-	handleError(err, "[Watermelon] PageSource err")
+	handleError(err, "")
 
 	doc, err = goquery.NewDocumentFromReader(bytes.NewReader([]byte(frameHTML)))
-	handleError(err, "[Watermelon] NewDocumentFromReader err")
+	handleError(err, "")
 
 	return
 }
 
 func getWatermelonDATA(doc *goquery.Document) {
-	// var db *mgo.Database
+	var db *mgo.Database
 	doc.Find("div.feed-item__list").Find("div.feed-card").Each(func(i int, s *goquery.Selection) {
 
 		link, _ := s.Find("a").Attr("href")
-		localTime := getLocalTimeVersion2()
+		localTime := getLocalTime()
 		viewersStr := strings.Replace(s.Find("span.feed-card__user__count").Text(), "w", "", -1)
 		viewers, _ := strconv.ParseFloat(viewersStr, 32)
 		thumbnails, _ := s.Find("div.feed-card__cover").Attr("style")
-		thumbnails = watermelonThumbnailsFormat(thumbnails)
+		thumbnails = "http:" + thumbnails[strings.Index(thumbnails, "//"):len(thumbnails)-1]
+		thumbnails = strings.Replace(thumbnails, "580x327", "480x360", -1)
 		mongoDBData := &mongogo.MongoDB{
 			Title:            s.Find("div.feed-card__title").Text(),
 			Description:      "",
 			Platform:         "西瓜直播",
-			VideoID:          "",
+			VideoId:          "",
 			Host:             s.Find("span.feed-card__user__name").Text(),
 			Status:           "live",
 			Thumbnails:       thumbnails,
-			Published:        localTime,
+			Published:        "",
 			Tags:             s.Find("feed-card__activity-tag").Text(),
 			GeneralTag:       "",
-			Timestamp:        localTime,
+			Timestamp:        localTime.String(),
 			Language:         "Simplified Chinese",
 			ViewCount:        int(viewers * 10000),
 			Viewers:          int(viewers * 10000),
@@ -81,18 +83,11 @@ func getWatermelonDATA(doc *goquery.Document) {
 			ChatRoomEmbedded: "",
 			Channel:          "",
 		}
-		// if i%100 == 0 {
-		// 	db = mongogo.GetService("Crawler")
-		// }
-		// mongogo.MongogoInitial(db, "Livestreams", *mongoDBData)
-		sendToElasticByHTTPPost(*mongoDBData)
-
+		if i%100 == 0 {
+			db = mongogo.GetService("Crawler")
+		}
+		mongogo.MongogoInitial(db, "Livestreams", *mongoDBData)
 		//log.Println("i is", i)
 		//log.Printf("%+v", *mongoDBData)
 	})
-}
-func watermelonThumbnailsFormat(str string) (thumbnails string) {
-	thumbnails = "http:" + str[strings.Index(str, "//"):strings.Index(str, ".jpeg")+5]
-	thumbnails = strings.Replace(thumbnails, "580x327", "480x360", -1)
-	return
 }

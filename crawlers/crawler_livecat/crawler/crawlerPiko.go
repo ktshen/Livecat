@@ -124,7 +124,7 @@ func getStreamerData(wd selenium.WebDriver, doc *goquery.Document) {
 			Title:            title,
 			Description:      "",
 			Platform:         platform,
-			VideoID:          "",
+			VideoId:          "",
 			Host:             username,
 			Status:           "live",
 			Thumbnails:       thumbnails,

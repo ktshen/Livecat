@@ -10,6 +10,7 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/tebeka/selenium"
+	"gopkg.in/mgo.v2"
 )
 
 // SeventeenInitial is initial to crawler 17live
@@ -41,38 +42,37 @@ func getSeventeenDoc(wd selenium.WebDriver, url string) (doc *goquery.Document) 
 
 	var frameHTML string
 	frameHTML, err := wd.PageSource()
-	handleError(err, "[17] PageSource err")
+	handleError(err, "")
 
 	doc, err = goquery.NewDocumentFromReader(bytes.NewReader([]byte(frameHTML)))
-	handleError(err, "[17] NewDocumentFromReader err")
+	handleError(err, "")
 	return
 }
 
 func getSeventeenDATA(doc *goquery.Document) {
-	// var db *mgo.Database
+	var db *mgo.Database
 	doc.Find("div.Grid__Row-eThVWD").Find("div.LiveStreamBlock__Block-bdJheI").Each(func(i int, s *goquery.Selection) {
 		title, _ := s.Find("a").Attr("title")
-		localTime := getLocalTimeVersion2()
+		localTime := getLocalTime()
 		videourl, _ := s.Find("a").Attr("href")
 		viewers := s.Find("a").Find("span.Msg-eAZFzz").Text()
 		viewers = strings.Replace(viewers, ",", "", -1)
 		viewersInt, _ := strconv.Atoi(viewers)
 		thumbnails, _ := s.Find("a").Find("div.LiveStreamBlock__AvatarWrapper-CSDSj").Attr("style")
-
-		thumbnails = seventeenThumbnailsFormat(thumbnails)
+		thumbnails = thumbnails[strings.Index(thumbnails, "url(\"")+5 : strings.Index(thumbnails, "jpg\")")+3]
 
 		mongoDBData := &mongogo.MongoDB{
 			Title:            title,
 			Description:      "",
 			Platform:         "17直播",
-			VideoID:          "",
+			VideoId:          "",
 			Host:             title,
 			Status:           "live",
 			Thumbnails:       thumbnails,
-			Published:        localTime,
+			Published:        "",
 			Tags:             "",
 			GeneralTag:       "",
-			Timestamp:        localTime,
+			Timestamp:        localTime.String(),
 			Language:         "",
 			ViewCount:        viewersInt,
 			Viewers:          viewersInt,
@@ -81,20 +81,12 @@ func getSeventeenDATA(doc *goquery.Document) {
 			ChatRoomEmbedded: "",
 			Channel:          "",
 		}
-		// if i%100 == 0 {
-		// 	db = mongogo.GetService("Crawler")
-		// }
-		// mongogo.MongogoInitial(db, "Livestreams", *mongoDBData)
-		sendToElasticByHTTPPost(*mongoDBData)
-
-		//log.Println("i is", i)
-		//log.Printf("%+v", *mongoDBData)
+		if i%100 == 0 {
+			db = mongogo.GetService("Crawler")
+		}
+		mongogo.MongogoInitial(db, "Livestreams", *mongoDBData)
+		// log.Println("i is", i)
+		// log.Printf("%+v", *mongoDBData)
 
 	})
-}
-
-func seventeenThumbnailsFormat(thumbnails string) string {
-	thumbnails = thumbnails[strings.Index(thumbnails, "url(\"")+5:]
-	thumbnails = thumbnails[:strings.Index(thumbnails, "url(\"")-4]
-	return thumbnails
 }
