@@ -357,7 +357,7 @@ def update_videos_click_through():
     if not res:
         return False
 
-    if res['hits']['total'] == 0:
+    if len(res['hits']['hits']) == 0:
         return "Can't find corresponding data"
     else:
         res = es_update(_id=res["hits"]["hits"][0]["_id"],
