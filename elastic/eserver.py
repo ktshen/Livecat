@@ -440,20 +440,17 @@ def create_or_update_doc():
 @app.route("/total_streams", methods=['GET'])
 def total_streams():
     qs = get_parameters_from_url(request)
-    if not "platform" in qs:
-        abort(400)
     body = {
         "query": {
             "bool" :{
                 "filter": [
                     {"match_phrase": {"status": "live"}},
                 ],
-                "must": [
-                    {"match_phrase": {"platform": qs["platform"][0]}},
-                ]
             }
         }
     }
+    if "platform" in qs:
+       body["query"]["bool"]["must"] = [{"match_phrase": {"platform": qs["platform"][0]}}]
     response = es_count(body=body)
     if not response:
         abort(400)
