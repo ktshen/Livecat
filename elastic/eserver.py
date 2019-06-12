@@ -29,6 +29,7 @@ def remove_meaningless_string(text):
     text = text + '\n'
     return text
 
+
 def detect_language(string):
     string = remove_meaningless_string(string)
     langid_res = langid.classify(string)[0]

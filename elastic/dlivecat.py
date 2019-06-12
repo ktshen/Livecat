@@ -1,6 +1,7 @@
 from elasticsearch import Elasticsearch, ConflictError
 from urllib3.exceptions import TimeoutError, NewConnectionError
 import datetime
+import time
 
 es = Elasticsearch(timeout=60, max_retries=5, retry_on_timeout=True)
 
@@ -20,9 +21,10 @@ def connect_es_decorator(func):
             try:
                 results = func(*args, **kwargs)
                 success = True
-            except (TimeoutError, NewConnectionError) as e:
+            except (TimeoutError, NewConnectionError, ConflictError) as e:
                 logfunc(e)
                 retries_counter += 1
+                time.sleep(0.1)
         if not success:
             return False
         if not results:
