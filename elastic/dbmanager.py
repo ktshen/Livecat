@@ -174,7 +174,7 @@ class CheckYoutubeThumbnailsThread(BaseCheckThumbnailsThread):
 expirethread = ExpireDataThread()
 expirethread.start()
 
-for i in range(50):
+for i in range(10):
     check_twitch_thread = CheckTwitchThumbnailsThread(i)
     check_twitch_thread.start()
 
