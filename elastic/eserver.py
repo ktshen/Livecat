@@ -21,8 +21,9 @@ def is_ascii(s):
     return all(ord(c) < 128 for c in s)
 
 def remove_meaningless_string(text):
+    # url是沒意義的所以予以刪除
     RE_URL = re.compile("(https?://[^\s]+)", flags=re.UNICODE)
-
+    # 移除emoji
     text = emoji.get_emoji_regexp().sub('', text)
     text = RE_URL.sub(r'', text)
     text = text.replace('\n', ' ')
@@ -31,6 +32,7 @@ def remove_meaningless_string(text):
 
 
 def detect_language(string):
+    #先移除掉沒意義的字串後再開始偵測語言，提高準確性
     string = remove_meaningless_string(string)
     langid_res = langid.classify(string)[0]
     # langid在判別中日文上比較優秀
@@ -104,6 +106,7 @@ def query_elastic(q, fr=0, sz=50):
             }
         }
     }
+    # 針對非英文再加上match_phrase
     if not is_ascii(q):
         body["query"]["bool"]["should"].extend([
             {
@@ -159,7 +162,7 @@ def query_elastic(q, fr=0, sz=50):
         return False
 
     # if no results
-    if res['hits']['total'] == 0:
+    if len(res['hits']['hits']) == 0:
         body = {
             "size": sz,
             "from": fr,
@@ -386,6 +389,7 @@ def create_or_update_doc():
     except KeyError:
         return abort(400)
 
+    # 以videourl當作unique ID
     res = es_search(body={
         "query": {
             "bool": {
