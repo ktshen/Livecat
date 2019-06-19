@@ -418,7 +418,7 @@ def create_or_update_doc():
     except ValueError:
         published_time = time.strptime(form["published"], "%Y-%m-%dT%H:%M:%S+0000")
     viewers = 0 if not form.get("viewers", None) else int(form["viewers"])
-    form["popular_rate"] = int(viewers * 10000000000 / (time.mktime(published_time) - time.mktime(datetime.now().timetuple())))
+    form["popular_rate"] = int(viewers * 10000000000 / (time.mktime(datetime.now().timetuple())-time.mktime(published_time)))
 
     try:
         if len(res['hits']['hits']) == 0:
