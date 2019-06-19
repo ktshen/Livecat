@@ -417,7 +417,7 @@ def create_or_update_doc():
         published_time = time.strptime(form["published"], "%Y-%m-%dT%H:%M:%SZ")
     except ValueError:
         published_time = time.strptime(form["published"], "%Y-%m-%dT%H:%M:%S+0000")
-    viewers = 0 if not form.get("viewers", None) else form["viewers"]
+    viewers = 0 if not form.get("viewers", None) else int(form["viewers"])
     form["popular_rate"] = int(viewers / (time.mktime(published_time) - time.mktime(datetime.now().timetuple())))
 
     try:
