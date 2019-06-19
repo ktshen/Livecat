@@ -384,7 +384,7 @@ def create_or_update_doc():
     form = trans_to_smallcase_key(form)
 
     try:
-        if not form["host"] or not form["platform"] or not form["title"]:
+        if not form["host"] or not form["platform"] or not form["title"] or not form["published"]:
             return abort(400)
     except KeyError:
         return abort(400)
@@ -413,6 +413,10 @@ def create_or_update_doc():
     form["click_through"] = 0
     if not "status" in form or not form["status"]:
         form["status"] = "live"
+    published_time = time.strptime(form["published"], "%Y-%m-%dT%H:%M:%SZ")
+    viewers = 0 if not form.get("viewers", None) else form["viewers"]
+    form["popular_rate"] = int(viewers / (time.mktime(published_time) - time.mktime(datetime.now().timetuple())))
+
     try:
         if len(res['hits']['hits']) == 0:
             # Classify video's language
@@ -427,7 +431,7 @@ def create_or_update_doc():
                             body={"doc": {"timestamp": form["timestamp"],
                                           "description": form["description"],
                                           "status": form["status"],
-                                          "videourl": form["videourl"]}
+                                          "popular_rate": form["popular_rate"]}
                                   }
                             )
             if not res:
@@ -462,7 +466,29 @@ def total_streams():
 
 
 @app.route("/hot_page", methods=['GET'])
-def top_viewers():
+def get_top_popular_rate():
+    body = {
+        "size": 48,
+        "query": {
+            "bool": {
+                "filter": [
+                    {"match_phrase": {"status": "live"}},
+                ],
+            }
+        },
+        "sort" :[
+            {"popular_rate": {"order": "desc"}},
+            {"published": {"order": "desc"}},
+        ]
+    }
+    response = es_search(body=body)
+    if not response:
+        abort(400)
+    return jsonify(response)
+
+
+@app.route("/top_viewers", methods=['GET'])
+def get_top_viewers():
     body = {
         "size": 48,
         "query": {
@@ -516,7 +542,7 @@ def home_page():
                 "within_72_hours": results["hits"]["hits"][13:17]}
     # Most Viewed
     body = {
-        "size": 10,
+        "size": 4,
         "query": {
             "bool": {
                 "filter": [
@@ -532,6 +558,21 @@ def home_page():
     results = es_search(body=body)
     response["most_viewed"] = results["hits"]["hits"][0:4]
     # Hot
-    response["hot"] = results["hits"]["hits"][4:8]
+    body = {
+        "size": 4,
+        "query": {
+            "bool": {
+                "filter": [
+                    {"match_phrase": {"status": "live"}},
+                ],
+            }
+        },
+        "sort": [
+            {"popular_rate": {"order": "desc"}},
+            {"published": {"order": "desc"}},
+        ]
+    }
+    results = es_search(body=body)
+    response["hot"] = results["hits"]["hits"][0:4]
 
     return jsonify(response)
