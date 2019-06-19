@@ -466,7 +466,29 @@ def total_streams():
 
 
 @app.route("/hot_page", methods=['GET'])
-def top_viewers():
+def get_top_popular_rate():
+    body = {
+        "size": 48,
+        "query": {
+            "bool": {
+                "filter": [
+                    {"match_phrase": {"status": "live"}},
+                ],
+            }
+        },
+        "sort" :[
+            {"popular_rate": {"order": "desc"}},
+            {"published": {"order": "desc"}},
+        ]
+    }
+    response = es_search(body=body)
+    if not response:
+        abort(400)
+    return jsonify(response)
+
+
+@app.route("/top_viewers", methods=['GET'])
+def get_top_viewers():
     body = {
         "size": 48,
         "query": {
