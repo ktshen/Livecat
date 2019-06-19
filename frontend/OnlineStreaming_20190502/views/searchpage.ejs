@@ -1,0 +1,128 @@
+<% if(isLogin){ %>
+    <!DOCTYPE html>
+    <html dir="ltr" lang="en">
+    <head>
+        <% include head %>
+        <% include script %>
+    </head>
+
+    <body>
+        <div class="preloader">
+            <div class="lds-ripple">
+                <div class="lds-pos"></div>
+                <div class="lds-pos"></div>
+            </div>
+        </div>
+        <div id="main-wrapper">
+            <% include usertopbar %>
+            <% include sidebar %>
+            <div class="page-wrapper" style="background-color:#ffffff">
+                 <div class="page-breadcrumb">
+                    <div class="row">
+                        <div class="col-12 d-flex no-block align-items-center">
+                            <!-- <h4 class="page-title">Dashboard</h4> -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid">
+                    <!-- AD -->
+                    <div class="d-flex justify-content-center">
+                        <!-- /7682122/ilivenet_article_970x250_300x250_RWD -->
+                        <div id='div-gpt-ad-1559290911998-0'>
+                            <script>
+                                googletag.cmd.push(function() { googletag.display('div-gpt-ad-1559290911998-0'); });
+                                </script>
+                        </div>
+                    </div>
+                    <br>
+                    <h2>&nbsp;Results for "<%= keyword %>"</h2>
+                    <% include streamlist %>
+                    <% include ./pagination %>
+                </div>
+                <% include footer %>
+            </div>
+        </div>
+    </body>
+    </html>
+<% } else { %>
+    <!DOCTYPE html>
+    <html dir="ltr" lang="en">
+
+    <head>
+        <% include head %>
+        <% include script.ejs %>
+    </head>
+
+    <body>
+
+        <div class="preloader">
+            <div class="lds-ripple">
+                <div class="lds-pos"></div>
+                <div class="lds-pos"></div>
+            </div>
+        </div>
+        <div id="main-wrapper">
+            <% include topbar %>
+            <div class="container" style="background-color:#ffffff">
+                <br>
+                <!-- AD -->
+                <div class="d-flex justify-content-center">
+                    <!-- /7682122/ilivenet_article_970x250_300x250_RWD -->
+                    <div id='div-gpt-ad-1559290911998-0'>
+                        <script>
+                            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1559290911998-0'); });
+                            </script>
+                    </div>
+                </div>
+                <br>
+                <div class="row justify-content-center">
+                    <div class="wrap" style="width:60%">
+                          <div class="row">
+                            <div class="col-12">
+                                <form class="input-group">
+                                    <input type="search" class="form-control border-secondary py-2" placeholder="What are you looking for?" name="search">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit" formaction="/search">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+
+
+                <% include streamlist %>
+                <% include ./pagination %>
+                <!-- AD -->
+                    <!-- <div class="d-flex justify-content-between" >
+                        <div style="width:300px;height:250px;background-color:#c0c0c0">
+                            <div class="align-middle text-center mx-auto">
+                                <br><br><br><br><br>
+                                    <h1 >AD</h1>
+                            </div>
+                        </div>
+                        <div style="width:300px;height:250px;background-color:#c0c0c0">
+                            <div class="align-middle text-center mx-auto">
+                                <br><br><br><br><br>
+                                    <h1 >AD</h1>
+                            </div>
+                        </div>
+                        <div style="width:300px;height:250px;background-color:#c0c0c0">
+                            <div class="align-middle text-center mx-auto">
+                                <br><br><br><br><br>
+                                    <h1 >AD</h1>
+                            </div>
+                        </div>
+                    </div> -->
+
+            </div>
+            <% include footer %>
+        </div>
+    </body>
+
+    </html>
+<% } %>

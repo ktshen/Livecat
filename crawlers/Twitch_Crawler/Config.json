@@ -1,0 +1,6 @@
+{
+    "ifOnServerMongoServerIP" : "127.0.0.1",
+    "MongoServerIP" : "120.126.16.88",
+    "ESServer" : "http://120.126.16.96:17777/add",
+    "DBPort" : "27017"
+}

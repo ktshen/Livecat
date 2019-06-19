@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <% include head %>
+    <% include script %>
+    <link href="dist/css/starter-template.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <% include topbar %>
+        <% include loginmodal%>
+        <div class="container">
+            <br><br><br>
+            <div class="row justify-content-center">
+                <img src="/assets/images/livenet_logo.png" alt="homepage" width="35%" height="35%"/>
+            </div>
+            <br><br>
+            <div class="row justify-content-center">
+                <div class="wrap">
+                     <!-- <div class="starter-template"> -->
+                         <!-- <div class="row justify-content-center">
+                             <span class="logo-text">
+                                 <img src="/assets/images/logo-icon.png" alt="homepage" class="light-logo" />
+                             </span>
+                         </div> -->
+                         <!-- <span class="logo-text"> -->
+                              <!-- <img src="/assets/images/livenet_logo.png" alt="homepage" width="50%" /> -->
+                         <!-- </span> -->
+                         <!-- <p class="lead"></p> -->
+                     <!-- </div> -->
+
+                      <!-- <div class="search">
+                          <form class="app-search searchform" action='/search'>
+                              <input type="text" class="searchTerm" placeholder="What are you looking for?"  name="search">
+                              <button type="submit" class="searchButton" formaction="/search">
+                                  <i class="fa fa-search"></i>
+                              </button>
+                          </form>
+                      </div> -->
+
+                      <div class="row">
+                        <div class="col-12">
+                            <form class="input-group">
+                                <input type="search" class="form-control border-secondary py-2" placeholder="Live streaming search worldwide!" name="search">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="submit" formaction="/search">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container-fluid">
+                <br/>
+                <br/>
+                <% if (posts.length == 0 ) { %>
+                <% } else { %>
+                    <div class="row no-gutters">
+                        <% posts.forEach(function(post, index) {%>
+                            <% if (post.platform == "Twitch" || post.platform == "YouTube" ) { %>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                    <div class="card card-hover" >
+                                        <a href="javascript:void(0);" onclick="window.open('/livestream/<%= post.channel %>');saveClickAction('<%= post.videourl %>','<%= post.platform %>');">
+                                            <div class="box bg-white">
+                                                <!-- stream photo -->
+                                                <div style="position:relative">
+                                                    <% if (!post.thumbnails) { %>
+                                                        <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="60%">
+                                                    <% } else { %>
+                                                        <img class="rounded mx-auto" src="<%= post.thumbnails %>" alt="<%= post.platform %>-<%= post.title %>" width="100%" height="130px">
+                                                    <% } %>
+                                                    <!-- platform logo -->
+                                                    <div class="stream-img">
+                                                        <img src="/images/<%= post.platform %>-icon.png"  width="100%" height="100%"></img>
+                                                    </div>
+                                                    <!-- view number -->
+                                                    <% if (post.platform != "Facebook") { %>
+                                                        <div class="rounded viewcount">
+                                                            <a class="mdi mdi-eye"style="color: #FFFFFF"><%= post.viewers %></a>
+                                                        </div>
+                                                    <% } %>
+                                                    <!-- live status -->
+                                                    <% if (post.status == "live" || post.status == "Live" || post.status == "LIVE") { %>
+                                                        <div class="rounded livestatus">
+                                                            <a style="color: #FFFFFF">LIVE</a>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                                <div>
+                                                    <h6 class="text-black omit" style="color: #3e5569"><%= post.title %></h6>
+                                                    <p class="text-black-50 "><%= post.host %></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                    <div class="card card-hover">
+                                        <a href="javascript:void(0);" onclick="window.open('<%= post.videourl %>');saveClickAction('<%= post.videourl %>','<%= post.platform %>');">
+                                            <div class="box bg-white">
+                                                <div style="position:relative">
+                                                    <% if (!post.thumbnails) { %>
+                                                        <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="60%">
+                                                    <% } else { %>
+                                                        <img class="rounded mx-auto" src="<%= post.thumbnails %>" alt="<%= post.platform %>-<%= post.title %>" width="100%" height="130px">
+                                                    <% } %>
+                                                    <!-- platform logo -->
+                                                    <div class="stream-img">
+                                                        <img src="/images/<%= post.platform %>-icon.png" width="100%" height="100%"></img>
+                                                    </div>
+                                                    <!-- view number -->
+                                                    <% if (post.platform != "Facebook") { %>
+                                                        <div class="rounded viewcount">
+                                                            <a class="mdi mdi-eye"style="color: #FFFFFF"><%= post.viewers %></a>
+                                                        </div>
+                                                    <% } %>
+                                                    <!-- live status -->
+                                                    <% if (post.status == "live" || post.status == "Live" || post.status == "LIVE") { %>
+                                                        <div class="rounded livestatus">
+                                                            <a style="color: #FFFFFF">LIVE</a>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                                <div>
+                                                    <div>
+                                                        <h6 class="text-black omit" style="color: #3e5569"><%= post.title %></h6>
+                                                    </div>
+                                                    <p class="text-black-50 "><%= post.host %></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <%}) %>
+                    </div>
+                <% } %>
+                <br>
+                <div class="d-flex justify-content-center">
+                    <!-- /7682122/ilivenet_home_728x90_320x100_RWD -->
+                    <div id='div-gpt-ad-1559290724228-0'>
+                        <script>
+                            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1559290724228-0'); });
+                            </script>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+    <div class="a2a_kit a2a_kit_size_32 a2a_default_style d-flex justify-content-center" data-a2a-url="https://www.ilivenet.com" style="margin-bottom:10px">
+        <a class="a2a_button_facebook"></a>
+        <a class="a2a_button_twitter"></a>
+        <a class="a2a_button_line"></a>
+        <a class="a2a_button_sina_weibo"></a>
+    </div>
+    <% include ./footer %>
+</body>
+
+</html>

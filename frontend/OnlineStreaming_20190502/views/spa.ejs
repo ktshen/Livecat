@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <% include head %>
+    <% include script.ejs %>
+</head>
+
+<body>
+
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <% include ./usertopbar %>
+        <% include ./sidebar %>
+        <div class="page-wrapper" style="background-color:#ffffff">
+            <div class="container-fluid">
+                <!-- AD -->
+                <div class="d-flex justify-content-center">
+                    <!-- /7682122/ilivenet_article_728x90_320x100_RWD -->
+                    <div id='div-gpt-ad-1559291062996-0'>
+                        <script>
+                            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1559291062996-0'); });
+                        </script>
+                    </div>
+                </div>
+                <br>
+                <% if (baseurl.includes("/platform")) { %>
+                    <h2 style="display: inline;">&nbsp;<%= pageTitle %></h2>
+                    <h4 style="display: inline;">&nbsp;【Online :&nbsp;</h4>
+                    <h4 style="display: inline;color:#ffb800;"> <%= onlineNum %></h4><h4 style="display: inline;"> 】</h4>
+                <% } %>
+                <% include ./streamlist %>
+                <% include ./pagination %>
+            </div>
+            <% include ./footer %>
+        </div>
+    </div>
+
+</body>
+
+</html>
