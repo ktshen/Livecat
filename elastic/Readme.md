@@ -160,6 +160,6 @@ curl -X GET "localhost:9200/_cluster/health?pretty"
 ## Create new index
 
 ```
-curl -X PUT "localhost:9200/livestreams" -H 'Content-Type: application/json' -d' { "settings" : { "index" : { "number_of_shards" : 3, "number_of_replicas" : 1 } } , "mappings" : { "properties" : { "timestamp" : { "type" : "date" } , "published" : { "type" : "date" } , "click_through" : { "type" : "integer" } , "viewers" : { "type" : "integer" } , "viewcount" : { "type" : "integer" } } } } '
+curl -X PUT "localhost:9200/livestreams" -H 'Content-Type: application/json' -d' { "settings" : { "index" : { "number_of_shards" : 3, "number_of_replicas" : 1 } } , "mappings" : { "properties" : { "timestamp" : { "type" : "date" } , "published" : { "type" : "date" } , "click_through" : { "type" : "integer" } , "viewers" : { "type" : "integer" } , "viewcount" : { "type" : "integer" } , "popular_rate": { "type" : "integer" } } } } '
 ```
 

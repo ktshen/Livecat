@@ -509,28 +509,6 @@ def get_top_viewers():
     return jsonify(response)
 
 
-@app.route("/top_viewers", methods=['GET'])
-def top_viewers():
-    body = {
-        "size": 48,
-        "query": {
-            "bool": {
-                "filter": [
-                    {"match_phrase": {"status": "live"}},
-                ],
-            }
-        },
-        "sort" :[
-            {"viewers": {"order": "desc"}},
-            {"published": {"order": "desc"}},
-        ]
-    }
-    response = es_search(body=body)
-    if not response:
-        abort(400)
-    return jsonify(response)
-
-
 @app.route("/home_page", methods=['GET'])
 def home_page():
     body = {
