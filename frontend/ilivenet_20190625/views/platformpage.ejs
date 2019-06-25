@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <% include head %>
+    <% include script.ejs %>
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        <% include ./usertopbar %>
+
+        <% include ./sidebar %>
+        <div class="page-wrapper bg-white" >
+            <div class="container-fluid">
+                <!-- AD -->
+                <div class="d-flex justify-content-center">
+                    <!-- /7682122/ilivenet_article_728x90_320x100_RWD -->
+                    <div id='div-gpt-ad-1559291062996-0'>
+                        <script>
+                            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1559291062996-0'); });
+                            </script>
+                    </div>
+                </div>
+                <br>
+
+                <% if (posts.length == 0 ) { %>
+                    <h2> Welcome to iLiveNet</h2>
+                <% } else { %>
+                    <% platforms.forEach(function(platform, index) {%>
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xlg-12 tab">
+
+                                <!-- Nav tabs -->
+                                <ul id="tabsJustified" class="nav nav-tabs">
+                                    <a href="<%= baseurl %>/<%= platform %>" style="color:#3e5569">
+                                        <h3> &nbsp;&nbsp;<%= platform %> &nbsp;&nbsp;</h3>
+                                    </a>
+                                    <% if (platform == "17直播" || platform == "西瓜直播") { %>
+                                        <li class="nav-item"><a class="nav-link active" href="" data-target="#Zh-<%= platform %>" aria-controls="profile" role="tab" data-toggle="tab">中文</a></li>
+                                    <% } else if (platform == "Facebook") {%>
+                                        <li class="nav-item"><a class="nav-link" href="" data-target="#En-<%= platform %>" aria-controls="home" role="tab" data-toggle="tab">EN</a></li>
+                                        <li class="nav-item"><a class="nav-link active" href="" data-target="#Zh-<%= platform %>" aria-controls="profile" role="tab" data-toggle="tab">中文</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="" data-target="#Ja-<%= platform %>" aria-controls="messages" role="tab" data-toggle="tab">日文</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="" data-target="#Others-<%= platform %>" aria-controls="messages" role="tab" data-toggle="tab">OTHERS</a></li>
+                                    <% } else {%>
+                                        <li class="nav-item"><a class="nav-link active" href="" data-target="#En-<%= platform %>" aria-controls="home" role="tab" data-toggle="tab">EN</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="" data-target="#Zh-<%= platform %>" aria-controls="profile" role="tab" data-toggle="tab">中文</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="" data-target="#Ja-<%= platform %>" aria-controls="messages" role="tab" data-toggle="tab">日文</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="" data-target="#Others-<%= platform %>" aria-controls="messages" role="tab" data-toggle="tab">OTHERS</a></li>
+                                    <% } %>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div id="tabsJustifiedContent" class="tab-content">
+                                    <% if (platform == "17直播" || platform == "西瓜直播" || platform == "Facebook") { %>
+                                        <div class="tab-pane fade" id="En-<%= platform %>">
+                                    <% } else {%>
+                                        <div class="tab-pane fade active show" id="En-<%= platform %>">
+                                    <% } %>
+                                        <div class="row no-gutters">
+                                            <% posts.forEach(function(post, index) {%>
+                                                <% if (post.platform == platform && post.language == "en") { %>
+                                                    <% post.data.forEach(function(d, index) {%>
+                                                        <% if (d._source.platform == "Twitch" || d._source.platform == "YouTube") { %>
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                                                <div class="card card-hover">
+                                                                    <a href="javascript:void(0);" onclick="window.open('/livestream/<%= d._source.channel %>');saveClickAction('<%= d._source.videourl %>','<%= d._source.platform %>');">
+                                                                        <div class="box bg-white">
+                                                                            <div style="position:relative">
+                                                                                <% if (!d._source.thumbnails) { %>
+                                                                                    <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } else { %>
+                                                                                    <img class="rounded mx-auto" src="<%= d._source.thumbnails %>" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } %>
+                                                                                <!-- platform logo -->
+                                                                                <div class="stream-img">
+                                                                                    <img src="/images/<%= d._source.platform %>-icon.png" width="100%" height="100%"></img>
+                                                                                </div>
+                                                                                <!-- view number -->
+                                                                                <% if (d._source.platform != "Facebook") { %>
+                                                                                    <div class="rounded viewcount">
+                                                                                        <a class="mdi mdi-eye"style="color: #FFFFFF"><%= d._source.viewers %></a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <!-- live status -->
+                                                                                <% if (d._source.status == "live" || d._source.status == "Live" || d._source.status == "LIVE") { %>
+                                                                                    <div class="rounded livestatus">
+                                                                                        <a style="color: #FFFFFF">LIVE</a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                            </div>
+                                                                            <div>
+                                                                                <h6 class="text-black omit" style="color: #3e5569"><%= d._source.title %></h6>
+                                                                                <p class="text-black-50 "><%= d._source.host %></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                                                <div class="card card-hover">
+                                                                    <a href="javascript:void(0);" onclick="window.open('<%= d._source.videourl %>');saveClickAction('<%= d._source.videourl %>','<%= d._source.platform %>');">
+                                                                        <div class="box bg-white">
+                                                                            <div style="position:relative">
+                                                                                <% if (!d._source.thumbnails) { %>
+                                                                                    <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } else { %>
+                                                                                    <img class="rounded mx-auto" src="<%= d._source.thumbnails %>" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } %>
+                                                                                <!-- platform logo -->
+                                                                                <div class="stream-img">
+                                                                                    <img src="/images/<%= d._source.platform %>-icon.png" width="100%" height="100%"></img>
+                                                                                </div>
+                                                                                <!-- view number -->
+                                                                                <% if (post.platform != "Facebook") { %>
+                                                                                    <div class="rounded viewcount">
+                                                                                        <a class="mdi mdi-eye"style="color: #FFFFFF"><%= d._source.viewers %></a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <!-- live status -->
+                                                                                <% if (d._source.status == "live" || d._source.status == "Live" || d._source.status == "LIVE") { %>
+                                                                                    <div class="rounded livestatus">
+                                                                                        <a style="color: #FFFFFF">LIVE</a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                            </div>
+                                                                            <div>
+                                                                                <h6 class="text-black omit" style="color: #3e5569"><%= d._source.title %></h6>
+                                                                                <p class="text-black-50 "><%= d._source.host %></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <% } %>
+                                                    <%}) %>
+                                                <% } %>
+                                            <%}) %>
+                                        </div>
+                                    </div>
+                                    <% if (platform == "17直播" || platform == "西瓜直播" || platform == "Facebook") { %>
+                                        <div class="tab-pane fade active show" id="Zh-<%= platform %>">
+                                    <% } else {%>
+                                        <div class="tab-pane fade" id="Zh-<%= platform %>">
+                                    <% } %>
+                                        <div class="row no-gutters">
+                                            <% posts.forEach(function(post, index) {%>
+                                                <% if (post.platform == platform && post.language == "zh") { %>
+                                                    <% post.data.forEach(function(d, index) {%>
+                                                        <% if (d._source.platform == "Twitch" || d._source.platform == "YouTube") { %>
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                                                <div class="card card-hover">
+                                                                    <a href="javascript:void(0);" onclick="window.open('/livestream/<%= d._source.channel %>');saveClickAction('<%= d._source.videourl %>','<%= d._source.platform %>');">
+                                                                        <div class="box bg-white">
+                                                                            <div style="position:relative">
+                                                                                <% if (!d._source.thumbnails) { %>
+                                                                                    <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } else { %>
+                                                                                    <img class="rounded mx-auto" src="<%= d._source.thumbnails %>" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } %>
+                                                                                <!-- platform logo -->
+                                                                                <div class="stream-img">
+                                                                                    <img src="/images/<%= d._source.platform %>-icon.png" width="100%" height="100%"></img>
+                                                                                </div>
+                                                                                <!-- view number -->
+                                                                                <% if (d._source.platform != "Facebook") { %>
+                                                                                    <div class="rounded viewcount">
+                                                                                        <a class="mdi mdi-eye"style="color: #FFFFFF"><%= d._source.viewers %></a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <!-- live status -->
+                                                                                <% if (d._source.status == "live" || d._source.status == "Live" || d._source.status == "LIVE") { %>
+                                                                                    <div class="rounded livestatus">
+                                                                                        <a style="color: #FFFFFF">LIVE</a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                            </div>
+                                                                            <div>
+                                                                                <h6 class="text-black omit" style="color: #3e5569"><%= d._source.title %></h6>
+                                                                                <p class="text-black-50 "><%= d._source.host %></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                                                <div class="card card-hover">
+                                                                    <a href="javascript:void(0);" onclick="window.open('<%= d._source.videourl %>');saveClickAction('<%= d._source.videourl %>','<%= d._source.platform %>');">
+                                                                        <div class="box bg-white">
+                                                                            <div style="position:relative">
+                                                                                <% if (!d._source.thumbnails) { %>
+                                                                                    <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } else { %>
+                                                                                    <img class="rounded mx-auto" src="<%= d._source.thumbnails %>" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } %>
+                                                                                <!-- platform logo -->
+                                                                                <div class="stream-img">
+                                                                                    <img src="/images/<%= d._source.platform %>-icon.png" width="100%" height="100%"></img>
+                                                                                </div>
+                                                                                <!-- view number -->
+                                                                                <% if (post.platform != "Facebook") { %>
+                                                                                    <div class="rounded viewcount">
+                                                                                        <a class="mdi mdi-eye"style="color: #FFFFFF"><%= d._source.viewers %></a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <!-- live status -->
+                                                                                <% if (d._source.status == "live" || d._source.status == "Live" || d._source.status == "LIVE") { %>
+                                                                                    <div class="rounded livestatus">
+                                                                                        <a style="color: #FFFFFF">LIVE</a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                            </div>
+                                                                            <div>
+                                                                                <h6 class="text-black omit" style="color: #3e5569"><%= d._source.title %></h6>
+                                                                                <p class="text-black-50 "><%= d._source.host %></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <% } %>
+                                                    <%}) %>
+                                                <% } %>
+                                            <%}) %>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="Ja-<%= platform %>">
+                                        <div class="row no-gutters">
+                                            <% posts.forEach(function(post, index) {%>
+                                                <% if (post.platform == platform && post.language == "ja" ) { %>
+                                                    <% post.data.forEach(function(d, index) {%>
+                                                        <% if (d._source.platform == "Twitch" || d._source.platform == "YouTube") { %>
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                                                <div class="card card-hover">
+                                                                    <a href="javascript:void(0);" onclick="window.open('/livestream/<%= d._source.channel %>');saveClickAction('<%= d._source.videourl %>','<%= d._source.platform %>');">
+                                                                        <div class="box bg-white">
+                                                                            <div style="position:relative">
+                                                                                <% if (!d._source.thumbnails) { %>
+                                                                                    <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } else { %>
+                                                                                    <img class="rounded mx-auto" src="<%= d._source.thumbnails %>" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } %>
+                                                                                <!-- platform logo -->
+                                                                                <div class="stream-img">
+                                                                                    <img src="/images/<%= d._source.platform %>-icon.png" width="100%" height="100%"></img>
+                                                                                </div>
+                                                                                <!-- view number -->
+                                                                                <% if (d._source.platform != "Facebook") { %>
+                                                                                    <div class="rounded viewcount">
+                                                                                        <a class="mdi mdi-eye"style="color: #FFFFFF"><%= d._source.viewers %></a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <!-- live status -->
+                                                                                <% if (d._source.status == "live" || d._source.status == "Live" || d._source.status == "LIVE") { %>
+                                                                                    <div class="rounded livestatus">
+                                                                                        <a style="color: #FFFFFF">LIVE</a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                            </div>
+                                                                            <div>
+                                                                                <h6 class="text-black omit" style="color: #3e5569"><%= d._source.title %></h6>
+                                                                                <p class="text-black-50 "><%= d._source.host %></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                                                <div class="card card-hover">
+                                                                    <a href="javascript:void(0);" onclick="window.open('<%= d._source.videourl %>');saveClickAction('<%= d._source.videourl %>','<%= d._source.platform %>');">
+                                                                        <div class="box bg-white">
+                                                                            <div style="position:relative">
+                                                                                <% if (!d._source.thumbnails) { %>
+                                                                                    <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } else { %>
+                                                                                    <img class="rounded mx-auto" src="<%= d._source.thumbnails %>" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } %>
+                                                                                <!-- platform logo -->
+                                                                                <div class="stream-img">
+                                                                                    <img src="/images/<%= d._source.platform %>-icon.png" width="100%" height="100%"></img>
+                                                                                </div>
+                                                                                <!-- view number -->
+                                                                                <% if (post.platform != "Facebook") { %>
+                                                                                    <div class="rounded viewcount">
+                                                                                        <a class="mdi mdi-eye"style="color: #FFFFFF"><%= d._source.viewers %></a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <!-- live status -->
+                                                                                <% if (d._source.status == "live" || d._source.status == "Live" || d._source.status == "LIVE") { %>
+                                                                                    <div class="rounded livestatus">
+                                                                                        <a style="color: #FFFFFF">LIVE</a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                            </div>
+                                                                            <div>
+                                                                                <h6 class="text-black omit" style="color: #3e5569"><%= d._source.title %></h6>
+                                                                                <p class="text-black-50 "><%= d._source.host %></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <% } %>
+                                                    <%}) %>
+                                                <% } %>
+                                            <%}) %>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="Others-<%= platform %>">
+                                        <div class="row no-gutters">
+                                            <% posts.forEach(function(post, index) {%>
+                                                <% if (post.platform == platform && post.language == "others") { %>
+                                                    <% post.data.forEach(function(d, index) {%>
+                                                        <% if (d._source.platform == "Twitch" || d._source.platform == "YouTube") { %>
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                                                <div class="card card-hover">
+                                                                    <a href="javascript:void(0);" onclick="window.open('/livestream/<%= d._source.channel %>');saveClickAction('<%= d._source.videourl %>','<%= d._source.platform %>');">
+                                                                        <div class="box bg-white">
+                                                                            <div style="position:relative">
+                                                                                <% if (!d._source.thumbnails) { %>
+                                                                                    <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } else { %>
+                                                                                    <img class="rounded mx-auto" src="<%= d._source.thumbnails %>" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } %>
+                                                                                <!-- platform logo -->
+                                                                                <div class="stream-img">
+                                                                                    <img src="/images/<%= d._source.platform %>-icon.png" width="100%" height="100%"></img>
+                                                                                </div>
+                                                                                <!-- view number -->
+                                                                                <% if (d._source.platform != "Facebook") { %>
+                                                                                    <div class="rounded viewcount">
+                                                                                        <a class="mdi mdi-eye"style="color: #FFFFFF"><%= d._source.viewers %></a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <!-- live status -->
+                                                                                <% if (d._source.status == "live" || d._source.status == "Live" || d._source.status == "LIVE") { %>
+                                                                                    <div class="rounded livestatus">
+                                                                                        <a style="color: #FFFFFF">LIVE</a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                            </div>
+                                                                            <div>
+                                                                                <h6 class="text-black omit" style="color: #3e5569"><%= d._source.title %></h6>
+                                                                                <p class="text-black-50 "><%= d._source.host %></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                                                <div class="card card-hover">
+                                                                    <a href="javascript:void(0);" onclick="window.open('<%= d._source.videourl %>');saveClickAction('<%= d._source.videourl %>','<%= d._source.platform %>');">
+                                                                        <div class="box bg-white">
+                                                                            <div style="position:relative">
+                                                                                <% if (!d._source.thumbnails) { %>
+                                                                                    <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } else { %>
+                                                                                    <img class="rounded mx-auto" src="<%= d._source.thumbnails %>" alt="Generic placeholder image" width="100%" height="130px">
+                                                                                <% } %>
+                                                                                <!-- platform logo -->
+                                                                                <div class="stream-img">
+                                                                                    <img src="/images/<%= d._source.platform %>-icon.png" width="100%" height="100%"></img>
+                                                                                </div>
+                                                                                <!-- view number -->
+                                                                                <% if (post.platform != "Facebook") { %>
+                                                                                    <div class="rounded viewcount">
+                                                                                        <a class="mdi mdi-eye"style="color: #FFFFFF"><%= d._source.viewers %></a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <!-- live status -->
+                                                                                <% if (d._source.status == "live" || d._source.status == "Live" || d._source.status == "LIVE") { %>
+                                                                                    <div class="rounded livestatus">
+                                                                                        <a style="color: #FFFFFF">LIVE</a>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                            </div>
+                                                                            <div>
+                                                                                <h6 class="text-black omit" style="color: #3e5569"><%= d._source.title %></h6>
+                                                                                <p class="text-black-50 "><%= d._source.host %></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        <% } %>
+                                                    <%}) %>
+                                                <% } %>
+                                            <%}) %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div align="right">
+                            <h4 style="display: inline;">【Online :&nbsp;</h4>
+                            <% switch (platform) {
+                                case "Twitch": %>
+                                    <h4 style="display: inline;color:#ffb800;"> <%= streamsCounter.twitch %></h4><h4 style="display: inline;"> 】</h4>
+                                    <% break; %>
+                                <% case "YouTube": %>
+                                    <h4 style="display: inline;color:#ffb800;"> <%= streamsCounter.youtube %></h4><h4 style="display: inline;"> 】</h4>
+                                    <% break; %>
+                                <% case "Facebook": %>
+                                    <h4 style="display: inline;color:#ffb800;"> <%= streamsCounter.facebook %></h4><h4 style="display: inline;"> 】</h4>
+                                    <% break; %>
+                                <% case "17直播": %>
+                                    <h4 style="display: inline;color:#ffb800;"> <%= streamsCounter.live17 %></h4><h4 style="display: inline;"> 】</h4>
+                                    <% break; %>
+                                <% case "西瓜直播": %>
+                                    <h4 style="display: inline;color:#ffb800;"> <%= streamsCounter.xigua %></h4><h4 style="display: inline;"> 】</h4>
+                                    <% break; %>
+                            <% } %>
+                            <a href="<%= baseurl %>/<%= platform %>" style="color:#3e5569">see more >></a><br><br>
+                        </div>
+                    <%}) %>
+                <% } %>
+            </div>
+
+        </div>
+        <% include ./footer %>
+    </div>
+</body>
+
+</html>

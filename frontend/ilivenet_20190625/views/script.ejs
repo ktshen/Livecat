@@ -1,0 +1,314 @@
+<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+<script src="/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+<script src="/assets/extra-libs/sparkline/sparkline.js"></script>
+<!--Wave Effects -->
+<script src="/dist/js/waves.js"></script>
+<!--Menu sidebar -->
+<script src="/dist/js/sidebarmenu.js"></script>
+<!--Custom JavaScript -->
+<script src="/dist/js/custom.min.js"></script>
+<!--This page JavaScript -->
+<!-- <script src="dist/js/pages/dashboards/dashboard1.js"></script> -->
+<!-- Charts js Files -->
+<script src="/assets/libs/flot/excanvas.js"></script>
+<script src="/assets/libs/flot/jquery.flot.js"></script>
+<script src="/assets/libs/flot/jquery.flot.pie.js"></script>
+<script src="/assets/libs/flot/jquery.flot.time.js"></script>
+<script src="/assets/libs/flot/jquery.flot.stack.js"></script>
+<script src="/assets/libs/flot/jquery.flot.crosshair.js"></script>
+<script src="/assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
+<script src="/dist/js/pages/chart/chart-page-init.js"></script>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+
+
+<!-- firebase OAuth -->
+<script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyBwLV11D40M3xHTlkKH0yPGV7xlWTUtrrQ",
+        authDomain: "livecat-64d83.firebaseapp.com",
+        databaseURL: "https://livecat-64d83.firebaseio.com",
+        projectId: "livecat-64d83",
+        storageBucket: "livecat-64d83.appspot.com",
+        messagingSenderId: "1061822423169"
+    };
+    firebase.initializeApp(config);
+</script>
+<!-- login function -->
+<script>
+    function loginfunc() {
+              $.ajax({
+                type:'POST',
+                url: '/session/quicklogin',
+                dataType:"json",
+                data: {idToken: "anonymous"},
+                contentType: 'application/x-www-form-urlencoded',
+                xhrFields: {
+                  withCredentials: true
+                },
+                // crossDomain: true,
+                success: function(response){
+                    console.log(response);
+                      // window.location.href = response.redirect;
+                      window.location.reload();
+                  },
+                 error: function(response){
+                     console.log(response);
+                      // window.location.href = "/";
+                      window.location.reload();
+                 }
+               });
+    }
+
+    initApp();
+
+    function initApp() {
+        firebase.auth().getRedirectResult().then(function(result) {
+            console.log(result);
+            if (result.user) {
+              // This gives you a Google Access Token. You can use it to access the Google API.
+              // var token = result.credential.accessToken;
+              // console.log(token);
+              // ...
+              var user = firebase.auth().currentUser;
+              firebase.auth().onAuthStateChanged(function(user){
+                  if(user){
+                      console.log(user);
+                      // do logged in things
+                      firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+                          // Send token to your backend via HTTPS
+                              console.log(idToken);
+                              $.ajax({
+                                type:'POST',
+                                url: '/session/login',
+                                dataType:"json",
+                                data: {idToken: idToken},
+                                contentType: 'application/x-www-form-urlencoded',
+                                xhrFields: {
+                                  withCredentials: true
+                                },
+                                crossDomain: true,
+                                success: function(response){
+                                    console.log(response);
+                                      // window.location.href = response.redirect;
+                                      window.location.reload();
+                                  },
+                                 error: function(response){
+                                     console.log(response);
+                                     //your code here
+                                 }
+                               });
+                          });
+                  }else{
+                  // do not logged in things
+                  }
+              });
+              return ;
+            }
+            // The signed-in user info.
+            var user = result.user;
+          }).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+          });
+      // firebase.auth().getRedirectResult().then(function(authData) {
+      //   console.log(authData.user.uid);
+      //   var csrfToken = getCookie('_csrf')
+      //   return postIdTokenToSessionLogin('/sessionLogin', authData.user.uid, csrfToken);
+      //   }).catch(function(error) {
+      //   	console.log(error);
+      //   });
+    }
+
+    // Google signInWithRedirect
+    function signInWithGoogleRedirect(){
+        console.log("Google SignIn Pressed")
+        var googleAuthProvider = new firebase.auth.GoogleAuthProvider
+        googleAuthProvider.addScope('profile');
+        googleAuthProvider.addScope('email');
+        googleAuthProvider.addScope('https://www.googleapis.com/auth/plus.me');
+        firebase.auth().signInWithRedirect(googleAuthProvider);
+    }
+
+    // Facebook signInWithRedirect
+    function signInWithFacebook(){
+        console.log("Facebook SignIn Pressed")
+        var facebookAuthProvider = new firebase.auth.FacebookAuthProvider
+        firebase.auth().signInWithRedirect(facebookAuthProvider)
+            .then(function(data){
+                console.log(data)
+            })
+            .catch(function(error){
+                console.log(error)
+            })
+    }
+
+    // Facebook signInWithRedirect
+    function signInWithTwitter(){
+        console.log("Twitter SignIn Pressed")
+        var twitterAuthProvider = new firebase.auth.TwitterAuthProvider
+        firebase.auth().signInWithRedirect(twitterAuthProvider)
+            .then(function(data){
+                console.log(data)
+            })
+            .catch(function(error){
+                console.log(error)
+            })
+    }
+
+    // Log Out Function
+    function signOut(){
+        console.log("log out btn pressed")
+        firebase.auth().signOut()
+        .then(() => {
+            console.log("sign out successfully")
+            $.ajax({
+              type:'GET',
+              url: '/session/signout',
+              dataType:"json",
+              success: function(response){
+                  console.log(response);
+                    window.location.href = response.redirect;
+                },
+               error: function(response){
+                   console.log(response);
+                   //your code here
+               }
+             });
+        })
+        .catch(() => {
+            console.log("error while sign out")
+        })
+    }
+
+    // add 1 to the platform which user clicked
+    function saveClickAction(videourl, platform){
+        $.ajax({
+          type:'POST',
+          url: '/saveclick',
+          dataType:"json",
+          data: {
+              videourl: videourl,
+              platform: platform
+          },
+          contentType: 'application/x-www-form-urlencoded',
+          xhrFields: {
+            withCredentials: true
+          },
+          crossDomain: true,
+          success: function(response){
+            },
+           error: function(response){
+               console.log(response);
+           }
+         });
+         return;
+    }
+
+    // record the time duration of a video view
+    var start;
+    var end;
+
+    function start(){
+        start = new Date().getTime();
+        return;
+    }
+
+    function end(){
+        end = new Date().getTime();
+        dur = end - start;
+        var video = document.getElementById("video").name;
+
+        console.log("END");
+
+        $.ajax({
+          type:'POST',
+          url: "/savehistory",
+          dataType:"json",
+          data: {
+              videourl: video,
+              starttime: start,
+              endtime: end,
+              duration: dur
+          },
+          contentType: 'application/x-www-form-urlencoded',
+          xhrFields: {
+            withCredentials: true
+          },
+          crossDomain: true
+         });
+         return;
+    }
+
+    // popup window for login
+    var showloginmodal = function() {
+        $('#myModal').modal('show')
+    };
+    <% if (!isLogin) { %>
+        // $(window).ready(showloginmodal);
+    <% } %>
+
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140028064-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-140028064-1');
+</script>
+
+<!-- Google Adsense -->
+<script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>
+<script>
+  var googletag = googletag || {};
+  googletag.cmd = googletag.cmd || [];
+</script>
+
+<script>
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/7682122/ilivenet_home_970x250_300x250_RWD', [[300, 250], [970, 250]], 'div-gpt-ad-1559290567348-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.pubads().collapseEmptyDivs();
+    googletag.enableServices();
+  });
+</script>
+
+<script>
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/7682122/ilivenet_home_728x90_320x100_RWD', [[320, 100], [728, 90]], 'div-gpt-ad-1559290724228-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.pubads().collapseEmptyDivs();
+    googletag.enableServices();
+  });
+</script>
+
+<script>
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/7682122/ilivenet_article_970x250_300x250_RWD', [[300, 250], [970, 250]], 'div-gpt-ad-1559290911998-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.pubads().collapseEmptyDivs();
+    googletag.enableServices();
+  });
+</script>
+
+<script>
+  googletag.cmd.push(function() {
+    googletag.defineSlot('/7682122/ilivenet_article_728x90_320x100_RWD', [[320, 100], [728, 90]], 'div-gpt-ad-1559291062996-0').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.pubads().collapseEmptyDivs();
+    googletag.enableServices();
+  });
+</script>

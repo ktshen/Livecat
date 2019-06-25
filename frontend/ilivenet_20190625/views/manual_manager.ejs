@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <% include head %>
+    <% include script %>
+
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <% include usertopbar.ejs %>
+        <% include sidebar.ejs %>
+        <div class="page-wrapper" style="background-color:#ffffff">
+
+            <br>
+            <div class="container-fluid">
+                <div class="card col-md-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Keyword List</h3>
+
+                        <div class="input-group mb-3">
+                            <input id="userinput" type="text" class="form-control" placeholder="add an keyword..." aria-label="Add an item" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-info" id="enter" type="button">+</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12">
+                        <ul class="list-group" id="list">
+                            <% keys.forEach(function(key, index) {%>
+                                <li class="list-group-item" name="key" id="<%= key %>"><%= key %>
+                                    <button class="btn btn-outline-danger float-right" name="delete" onclick="this.parentNode.parentNode.removeChild(this.parentNode);" type="button">-</button>
+                                </li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <div class="col-3" style="padding-top:20px;padding-bottom:10px;">
+                        <button class="btn btn-outline-warning" id="enter" type="button" onclick="getname()">submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <% include ./footer %>
+</body>
+
+
+    <script>
+        var addbutton = document.getElementById("enter");
+        var input = document.getElementById("userinput");
+        var ul = document.getElementById("list");
+
+        addbutton.addEventListener("click", function() {
+          var li = document.createElement("li");
+          // Add Bootstrap class to the list element
+          li.classList.add("list-group-item");
+          li.setAttribute("name", "key");
+          li.setAttribute("id", input.value);
+          li.appendChild(document.createTextNode(input.value));
+          var button = document.createElement("button");
+          button.setAttribute("class", "btn btn-outline-danger float-right");
+          button.setAttribute("name", "delete");
+          button.setAttribute("onclick", "this.parentNode.parentNode.removeChild(this.parentNode);");
+          button.setAttribute("type", "button");
+          button.append("-");
+          li.appendChild(button);
+          ul.appendChild(li);
+          // Clear your input
+          input.value = "";
+    });
+
+    function removeItem(){
+        var ul = document.querySelector("ul");
+        var candidate = document.getElementById("candidate");
+        var item = document.getElementById(candidate.value);
+        ul.removeChild(item);
+    }
+
+
+    function getname(){
+        var keys = document.getElementsByName("key");
+        var vals=[];
+        for (var i=0, n=keys.length;i<n;i++) {
+          vals.push(keys[i].id);
+        }
+        alert("KEYWORDS: "+vals.join(","))
+
+              $.ajax({
+                type:'POST',
+                url: '/save_manual_manager',
+                dataType:"json",
+                data: {keyword: vals} ,
+                traditional: true,
+                contentType: 'application/x-www-form-urlencoded',
+                xhrFields: {
+                  withCredentials: true
+                },
+                // crossDomain: true,
+                success: function(response){
+                    console.log(response);
+                  },
+                 error: function(response){
+                     console.log(response);
+                 }
+               });
+
+    }
+
+</script>
+
+</html>

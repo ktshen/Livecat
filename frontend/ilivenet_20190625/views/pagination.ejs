@@ -1,0 +1,139 @@
+<% if(!currentPage) { currentPage = 1 }%>
+<% currentPage = parseInt(currentPage);%>
+
+<!-- if url contains "search", needs 2 GET params -->
+<% if (baseurl  == "/search") { %>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center flex-wrap">
+
+    <!-- go to previous page -->
+    <% if(currentPage > 1) { %>
+        <li class="page-item">
+            <a class="page-link" href="?search=<%= keyword %>&pg=<%= currentPage-1  %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+    <% } %>
+
+    <!-- show "..." while omitting pages -->
+    <% if(currentPage-4 > 0) { %>
+        <li class="page-item"><a class="page-link" href="?search=<%= keyword %>&pg=1">1</a></li>
+        <li class="page-item disabled"><a class="page-link" "> ... </a></li>
+    <% } %>
+
+    <!-- When pages < 10, don't omit -->
+    <% if(pages.length < 10) {%>
+        <% pages.forEach(function(page, index) {%>
+                    <% if (page == currentPage) { %>
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">
+                                <%= page %>
+                                <span class="sr-only">(current)</span>
+                            </span>
+                        </li>
+                    <% } else { %>
+                        <li class="page-item"><a class="page-link" href="?search=<%= keyword %>&pg=<%= page %>"><%= page %></a></li>
+                    <% } %>
+        <%}) %>
+    <%} else {%>
+        <% for(var i=currentPage-3; i<currentPage+2; i++) {%>
+            <!-- pagination start from page 1 -->
+            <% if (i < 0) { continue; }%>
+            <!-- pagination stop at last page which is available -->
+            <% if (i > pages.length -1) { continue; }%>
+            <% if (pages[i] == currentPage) { %>
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">
+                        <%= pages[i] %>
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+            <% } else { %>
+                <li class="page-item"><a class="page-link" href="?search=<%= keyword %>&pg=<%= pages[i] %>"><%= pages[i] %></a></li>
+            <% } %>
+        <% } %>
+    <%} %>
+
+    <!-- show "..." while omitting pages -->
+    <% if(currentPage+2 < pages.length ) { %>
+        <li class="page-item disabled"><a class="page-link" "> ... </a></li>
+    <% } %>
+
+    <!-- go to next page -->
+    <% if(currentPage < pages.length -1) { %>
+        <li class="page-item">
+            <a class="page-link" href="?search=<%= keyword %>&pg=<%= currentPage+1  %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    <%} %>
+    </ul>
+</nav>
+<%} else {%>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center flex-wrap">
+
+        <!-- go to previous page -->
+        <% if(currentPage > 1) { %>
+            <li class="page-item">
+                <a class="page-link" href="?pg=<%= currentPage-1  %>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        <% } %>
+
+        <!-- show "..." while omitting pages -->
+        <% if(currentPage-4 > 0) { %>
+            <li class="page-item"><a class="page-link" href="?pg=1">1</a></li>
+            <li class="page-item disabled"><a class="page-link" "> ... </a></li>
+        <% } %>
+
+        <!-- When pages < 10, don't omit -->
+        <% if(pages.length < 10) {%>
+            <% pages.forEach(function(page, index) {%>
+                        <% if (page == currentPage) { %>
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">
+                                    <%= page %>
+                                    <span class="sr-only">(current)</span>
+                                </span>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item"><a class="page-link" href="?pg=<%= page %>"><%= page %></a></li>
+                        <% } %>
+            <%}) %>
+        <%} else {%>
+            <% for(var i=currentPage-3; i<currentPage+2; i++) {%>
+                <!-- pagination start from page 1 -->
+                <% if (i < 0) { continue; }%>
+                <!-- pagination stop at last page which is available -->
+                <% if (i > pages.length -1) { continue; }%>
+                <% if (pages[i] == currentPage) { %>
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">
+                            <%= pages[i] %>
+                            <span class="sr-only">(current)</span>
+                        </span>
+                    </li>
+                <% } else { %>
+                    <li class="page-item"><a class="page-link" href="?pg=<%= pages[i] %>"><%= pages[i] %></a></li>
+                <% } %>
+            <% } %>
+        <%} %>
+
+        <!-- show "..." while omitting pages -->
+        <% if(currentPage+2 < pages.length ) { %>
+            <li class="page-item disabled"><a class="page-link" "> ... </a></li>
+        <% } %>
+
+        <!-- go to next page -->
+        <% if(currentPage < pages.length -1) { %>
+            <li class="page-item">
+                <a class="page-link" href="?pg=<%= currentPage+1  %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <%} %>
+        </ul>
+    </nav>
+<%} %>
