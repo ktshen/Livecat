@@ -602,7 +602,7 @@ def cover_page():
         for k in keywords:
             result = query_elastic(k, sz=12)
             keyword_results.extend(result["hits"]["hits"])
-        keyword_results = random.shuffle(keyword_results)
+        random.shuffle(keyword_results)
     else:
         keyword_results = get_random_streams(sz=12)["hits"]["hits"]
     return jsonify(keyword_results)
