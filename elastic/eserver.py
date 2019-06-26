@@ -605,4 +605,5 @@ def cover_page():
         random.shuffle(keyword_results)
     else:
         keyword_results = get_random_streams(sz=12)["hits"]["hits"]
+    keyword_results = keyword_results[:12]
     return jsonify(keyword_results)
