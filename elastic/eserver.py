@@ -10,6 +10,10 @@ from pyfasttext import FastText
 import re
 import emoji
 import langid
+import requests
+import random
+
+KEYWORD_LIST_URL = "https://www.ilivenet.com/manual.txt"
 
 # wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 model = FastText('lid.176.bin')
@@ -273,6 +277,33 @@ def get_parameters_from_url(request):
     return parse_qs(parsed.query)
 
 
+def get_random_streams(fr=0, sz=30):
+    body = {
+        "from": fr,
+        "size": sz,
+        "query": {
+            "function_score": {
+                "query": {
+                    "bool": {
+                        "filter": [
+                            {"match_phrase": {"status": "live"}},
+                        ],
+                    }
+                },
+                "random_score": {
+                    "seed": str(int(time.mktime(datetime.now().timetuple()))),
+                    "field": "_seq_no"
+                },
+                "boost": "5",
+                "boost_mode": "replace"
+            }
+        }
+    }
+
+    return es_search(body=body)
+
+
+
 @app.route("/", methods=['GET'])
 def search():
     qs = get_parameters_from_url(request)
@@ -365,7 +396,7 @@ def update_videos_click_through():
     else:
         res = es_update(_id=res["hits"]["hits"][0]["_id"],
                         body={"script": {
-                            "source": "if(ctx._source.containsKey(\"click_through\")){ctx._source.click_through+=params.count} else{ctx._source.click_through=1}",
+                            "source": "if(ctx._source.containsKey(\"click_through\")){ctx._source.s+=params.count} else{ctx._source.click_through=1}",
                             "lang": "painless",
                             "params": {
                                 "count": 1
@@ -514,30 +545,7 @@ def get_top_viewers():
 
 @app.route("/home_page", methods=['GET'])
 def home_page():
-    body = {
-        "from": 0,
-        "size": 30,
-        "query": {
-            "function_score": {
-                "query": {
-                    "bool": {
-                        "filter": [
-                            {"match_phrase": {"status": "live"}},
-                        ],
-                    }
-                },
-                "random_score": {
-                    "seed": str(int(time.mktime(datetime.now().timetuple()))),
-                    "field": "_seq_no"
-                },
-                "boost": "5",
-                "boost_mode": "replace"
-            }
-        }
-    }
-
-    results = es_search(body=body)
-
+    results = get_random_streams()
     response = {"subscriptions": results["hits"]["hits"][0:4],  # Subscriptions
                 "upcoming": results["hits"]["hits"][4:5],       # Upcoming Stream
                 "recommended": results["hits"]["hits"][5:9],    # Recommended
@@ -579,3 +587,22 @@ def home_page():
     response["hot"] = results["hits"]["hits"][0:4]
 
     return jsonify(response)
+
+
+@app.route("/cover_page", methods=['GET'])
+def cover_page():
+    try:
+        r = requests.get(KEYWORD_LIST_URL)
+        keywords = json.loads(r.content)['keyword']
+    except requests.exceptions.ConnectionError:
+        logfunc("Can't connect to ", KEYWORD_LIST_URL)
+        keywords = []
+    if len(keywords):
+        keyword_results = []
+        for k in keywords:
+            result = query_elastic(k, sz=12)
+            keyword_results.extend(result["hits"]["hits"])
+        keyword_results = random.shuffle(keyword_results)
+    else:
+        keyword_results = get_random_streams(sz=12)["hits"]["hits"]
+    return jsonify(keyword_results)
