@@ -27,6 +27,7 @@ var keywordData = streamModel.Keyword;
 
 // get homepage
 exports.get_homepage= function(req, res) {
+    var newEventListArr = [];
     var streamListArr = [];
     var user;
 
@@ -52,6 +53,26 @@ exports.get_homepage= function(req, res) {
                   isLogin = false;
                     callback(null,"one");
                   }
+        },
+        function(callback) { // for not logged in
+            if(!isLogin){
+                request('http://'+config.queryAPI.server+'/cover_page', { json: true }, (err, res, body) => {
+                    if (err) {
+                        console.log(err);
+                        callback(null, "one");
+                    }else if (body){
+                        body.forEach(
+                                function(element) {
+                                    newEventListArr.push(element._source); // save json object into array
+                            });
+                      callback(null, "one");
+                    } else {
+                        callback(null, "one");
+                    }
+                });
+            }else{
+                callback(null,"one");
+            }
         },
         function(callback) { // for not logged in
             if(!isLogin){
@@ -185,6 +206,7 @@ exports.get_homepage= function(req, res) {
                     title : config.web.title,
                     baseurl : req.path,
                     posts : streamListArr,
+                    newEventListArr : newEventListArr,
                     currentPage : req.query.pg,
                     isLogin :isLogin,
                     user:user

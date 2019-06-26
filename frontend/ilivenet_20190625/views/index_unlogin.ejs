@@ -63,8 +63,97 @@
             <div class="container-fluid">
                 <br/>
                 <br/>
+
+                <!-- For manual new events -->
+                <% if (newEventListArr.length == 0 ) { %>
+                <% } else { %>
+                    <h2>&nbspNew Events</h2>
+                    <div class="row no-gutters">
+                        <% newEventListArr.forEach(function(newEvent, index) {%>
+                            <% if (newEvent.platform == "Twitch" || newEvent.platform == "YouTube" ) { %>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                    <div class="card card-hover" >
+                                        <a href="javascript:void(0);" onclick="window.open('/livestream/<%= newEvent.channel %>');saveClickAction('<%= newEvent.videourl %>','<%= newEvent.platform %>');">
+                                            <div class="box bg-white">
+                                                <!-- stream photo -->
+                                                <div style="position:relative">
+                                                    <% if (!newEvent.thumbnails) { %>
+                                                        <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="60%">
+                                                    <% } else { %>
+                                                        <img class="rounded mx-auto" src="<%= newEvent.thumbnails %>" alt="<%= newEvent.platform %>-<%= newEvent.title %>" width="100%" height="130px">
+                                                    <% } %>
+                                                    <!-- platform logo -->
+                                                    <div class="stream-img">
+                                                        <img src="/images/<%= newEvent.platform %>-icon.png"  width="100%" height="100%"></img>
+                                                    </div>
+                                                    <!-- view number -->
+                                                    <% if (newEvent.platform != "Facebook") { %>
+                                                        <div class="rounded viewcount">
+                                                            <a class="mdi mdi-eye"style="color: #FFFFFF"><%= newEvent.viewers %></a>
+                                                        </div>
+                                                    <% } %>
+                                                    <!-- live status -->
+                                                    <% if (newEvent.status == "live" || newEvent.status == "Live" || newEvent.status == "LIVE") { %>
+                                                        <div class="rounded livestatus">
+                                                            <a style="color: #FFFFFF">LIVE</a>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                                <div>
+                                                    <h6 class="text-black omit" style="color: #3e5569"><%= newEvent.title %></h6>
+                                                    <p class="text-black-50 "><%= newEvent.host %></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-xlg-3">
+                                    <div class="card card-hover">
+                                        <a href="javascript:void(0);" onclick="window.open('<%= newEvent.videourl %>');saveClickAction('<%= newEvent.videourl %>','<%= newEvent.platform %>');">
+                                            <div class="box bg-white">
+                                                <div style="position:relative">
+                                                    <% if (!newEvent.thumbnails) { %>
+                                                        <img class="rounded mx-auto" src="/images/no-photo-available.png" alt="Generic placeholder image" width="100%" height="60%">
+                                                    <% } else { %>
+                                                        <img class="rounded mx-auto" src="<%= newEvent.thumbnails %>" alt="<%= newEvent.platform %>-<%= newEvent.title %>" width="100%" height="130px">
+                                                    <% } %>
+                                                    <!-- platform logo -->
+                                                    <div class="stream-img">
+                                                        <img src="/images/<%= newEvent.platform %>-icon.png" width="100%" height="100%"></img>
+                                                    </div>
+                                                    <!-- view number -->
+                                                    <% if (newEvent.platform != "Facebook") { %>
+                                                        <div class="rounded viewcount">
+                                                            <a class="mdi mdi-eye"style="color: #FFFFFF"><%= newEvent.viewers %></a>
+                                                        </div>
+                                                    <% } %>
+                                                    <!-- live status -->
+                                                    <% if (newEvent.status == "live" || newEvent.status == "Live" || newEvent.status == "LIVE") { %>
+                                                        <div class="rounded livestatus">
+                                                            <a style="color: #FFFFFF">LIVE</a>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                                <div>
+                                                    <div>
+                                                        <h6 class="text-black omit" style="color: #3e5569"><%= newEvent.title %></h6>
+                                                    </div>
+                                                    <p class="text-black-50 "><%= newEvent.host %></p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <%}) %>
+                    </div>
+                <% } %>
+
+
                 <% if (posts.length == 0 ) { %>
                 <% } else { %>
+                    <h2>&nbspPlatform Collections</h2>
                     <div class="row no-gutters">
                         <% posts.forEach(function(post, index) {%>
                             <% if (post.platform == "Twitch" || post.platform == "YouTube" ) { %>
