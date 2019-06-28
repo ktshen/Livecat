@@ -190,7 +190,7 @@ class ManageHomePageStreamsDisplayThread(threading.Thread):
                     logfunc("Can't connect to ", KEYWORD_LIST_URL)
                     keywords = []
                 if len(keywords):
-                    keyword_results = {}
+                    keyword_dic = {}
                     for k in keywords:
                         keyword_dic[k] = query_elastic(k, sz=12)
                     keyword_results = []
@@ -199,7 +199,7 @@ class ManageHomePageStreamsDisplayThread(threading.Thread):
                         error_counter = 0
                         for k in keywords:
                             try:
-                                keyword_results.append(keywords_dic[k]["hits"]["hits"][idx])
+                                keyword_results.append(keyword_dic[k]["hits"]["hits"][idx])
                             except IndexError:
                                 error_counter += 1
                                 continue
