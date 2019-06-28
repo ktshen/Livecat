@@ -9,6 +9,7 @@ from dlivecat import logfunc, es_search, es_update
 import random
 import urllib.request
 from urllib.error import HTTPError
+from .eserver import query_elastic
 import json
 
 from elasticsearch import Elasticsearch
