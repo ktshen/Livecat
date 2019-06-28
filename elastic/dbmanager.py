@@ -174,7 +174,7 @@ class CheckYoutubeThumbnailsThread(BaseCheckThumbnailsThread):
             self.delete_data(hit)
 
 
-class ManageHomePageStreamsDisplayThread(threadin.Thread)
+class ManageHomePageStreamsDisplayThread(threading.Thread):
     def __init__(self):
         super().__init__()
         self.daemon = True
@@ -214,7 +214,7 @@ class ManageHomePageStreamsDisplayThread(threadin.Thread)
                 with open(KEYWORD_RESULTS_TEXT_FILE, "w") as f:
                     json.dump(keyword_results, f)
                 time.sleep(15)
-        except KeyBoardInterrupt:
+        except KeyboardInterrupt:
             pass
 
 
