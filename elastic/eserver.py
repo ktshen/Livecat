@@ -13,7 +13,7 @@ import langid
 import requests
 import random
 
-KEYWORD_LIST_URL = "https://www.ilivenet.com/manual.txt"
+KEYWORD_RESULTS_TEXT_FILE = "keywords_in_front_page.txt"
 
 # wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 model = FastText('lid.176.bin')
@@ -69,7 +69,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "title": {
                                 "query": q,
-                                "boost": 2,
+                                "boost": 4,
                                 "minimum_should_match": "90%",
                             }
                         }
@@ -84,7 +84,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "tags": {
                                 "query": q,
-                                "boost": 4,
+                                "boost": 3,
                                 "minimum_should_match": "80%",
                             }
                         }
@@ -92,7 +92,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "host": {
                                 "query": q,
-                                "boost": 4,
+                                "boost": 2,
                                 "minimum_should_match": "80%",
                             }
                         }
@@ -100,7 +100,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "platform": {
                                 "query": q,
-                                "boost": 3,
+                                "boost": 1,
                                 "minimum_should_match": "80%",
                             }
                         }
@@ -117,7 +117,7 @@ def query_elastic(q, fr=0, sz=50):
                 "match_phrase": {
                     "title": {
                         "query": q,
-                        "boost": 2,
+                        "boost": 4,
                         "slop": int(len(q) * 0.4) + 1
                     }
                 }
@@ -132,7 +132,7 @@ def query_elastic(q, fr=0, sz=50):
                 "match_phrase": {
                     "tags": {
                         "query": q,
-                        "boost": 4,
+                        "boost": 3,
                         "slop": int(len(q) * 0.2) + 1
                     }
                 }
@@ -140,7 +140,7 @@ def query_elastic(q, fr=0, sz=50):
                 "match_phrase": {
                     "host": {
                         "query": q,
-                        "boost": 4,
+                        "boost": 2,
                         "slop": int(len(q) * 0.2) + 1
                     }
                 }
@@ -148,7 +148,7 @@ def query_elastic(q, fr=0, sz=50):
                 "match_phrase": {
                     "platform": {
                         "query": q,
-                        "boost": 3,
+                        "boost": 1,
                         "slop": int(len(q) * 0.4) + 1
                     }
                 }
@@ -591,19 +591,6 @@ def home_page():
 
 @app.route("/cover_page", methods=['GET'])
 def cover_page():
-    try:
-        r = requests.get(KEYWORD_LIST_URL)
-        keywords = json.loads(r.content)['keyword']
-    except requests.exceptions.ConnectionError:
-        logfunc("Can't connect to ", KEYWORD_LIST_URL)
-        keywords = []
-    if len(keywords):
-        keyword_results = []
-        for k in keywords:
-            result = query_elastic(k, sz=12)
-            keyword_results.extend(result["hits"]["hits"])
-        random.shuffle(keyword_results)
-    else:
-        keyword_results = get_random_streams(sz=12)["hits"]["hits"]
-    keyword_results = keyword_results[:12]
-    return jsonify(keyword_results)
+    with open(KEYWORD_RESULTS_TEXT_FILE, "r") as f:
+        results = json.load(f)
+    return jsonify(results)

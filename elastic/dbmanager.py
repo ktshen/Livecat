@@ -9,12 +9,15 @@ from dlivecat import logfunc, es_search, es_update
 import random
 import urllib.request
 from urllib.error import HTTPError
+import json
 
 from elasticsearch import Elasticsearch
 es = Elasticsearch(timeout=60, max_retries=5, retry_on_timeout=True)
 
 TOLERANT__PUBLISHED_TIMEDELTA = datetime.timedelta(days=7)
 TOLERANT__TIMESTAMP_TIMEDELTA = datetime.timedelta(minutes=30)
+KEYWORD_LIST_URL = "https://www.ilivenet.com/manual.txt"
+KEYWORD_RESULTS_TEXT_FILE = "keywords_in_front_page.txt"
 
 class ExpireDataThread(threading.Thread):
     def run(self):
@@ -171,6 +174,50 @@ class CheckYoutubeThumbnailsThread(BaseCheckThumbnailsThread):
             self.delete_data(hit)
 
 
+class ManageHomePageStreamsDisplayThread(threadin.Thread)
+    def __init__(self):
+        super().__init__()
+        self.daemon = True
+
+    def run(self):
+        try:
+            while True:
+                try:
+                    r = requests.get(KEYWORD_LIST_URL)
+                    keywords = json.loads(r.content)['keyword']
+                except requests.exceptions.ConnectionError:
+                    logfunc("Can't connect to ", KEYWORD_LIST_URL)
+                    keywords = []
+                if len(keywords):
+                    keyword_results = {}
+                    for k in keywords:
+                        keyword_dic[k] = query_elastic(k, sz=12)
+                    keyword_results = []
+                    idx = 0
+                    while len(keyword_results) < 12:
+                        error_counter = 0
+                        for k in keywords:
+                            try:
+                                keyword_results.append(keywords_dic[k]["hits"]["hits"][idx])
+                            except IndexError:
+                                error_counter += 1
+                                continue
+                            if len(keyword_results) == 12:
+                                break
+                        if error_counter == len(keywords):
+                            logfunc("No enough results to display in cover page!")
+                            break
+                        idx += 1
+                else:
+                    keyword_results = get_random_streams(sz=12)["hits"]["hits"]
+
+                with open(KEYWORD_RESULTS_TEXT_FILE, "w") as f:
+                    json.dump(keyword_results, f)
+                time.sleep(15)
+        except KeyBoardInterrupt:
+            pass
+
+
 expirethread = ExpireDataThread()
 expirethread.start()
 
@@ -181,4 +228,6 @@ for i in range(10):
 check_youtube_thread = CheckYoutubeThumbnailsThread()
 check_youtube_thread.start()
 
+managefrontpagedisplay_thread = ManageHomePageStreamsDisplayThread()
+managefrontpagedisplay_thread.start()
 
