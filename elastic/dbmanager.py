@@ -9,7 +9,7 @@ from dlivecat import logfunc, es_search, es_update
 import random
 import urllib.request
 from urllib.error import HTTPError
-from eserver import query_elastic
+from eserver import query_elastic, get_random_streams
 import json
 
 from elasticsearch import Elasticsearch
@@ -192,29 +192,28 @@ class ManageHomePageStreamsDisplayThread(threading.Thread):
                 if len(keywords):
                     keyword_dic = {}
                     for k in keywords:
-                        keyword_dic[k] = query_elastic(k, sz=12)
+                        keyword_dic[k] = query_elastic(k, sz=5)
                     keyword_results = []
-                    idx = 0
                     while len(keyword_results) < 12:
                         error_counter = 0
                         for k in keywords:
-                            try:
-                                keyword_results.append(keyword_dic[k]["hits"]["hits"][idx])
-                            except IndexError:
+                            if not len(keyword_dic[k]["hits"]["hits"]):
                                 error_counter += 1
                                 continue
+                            ci = random.choice(range(len(keyword_dic[k]["hits"]["hits"])))
+                            keyword_results.append(keyword_dic[k]["hits"]["hits"][ci])
+                            del(keyword_dic[k]["hits"]["hits"][ci])
                             if len(keyword_results) == 12:
                                 break
                         if error_counter == len(keywords):
                             logfunc("No enough results to display in cover page!")
                             break
-                        idx += 1
                 else:
                     keyword_results = get_random_streams(sz=12)["hits"]["hits"]
 
                 with open(KEYWORD_RESULTS_TEXT_FILE, "w") as f:
                     json.dump(keyword_results, f)
-                time.sleep(15)
+                time.sleep(0)
         except KeyboardInterrupt:
             pass
 
