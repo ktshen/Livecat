@@ -1,6 +1,6 @@
 # 啟動eserver
 ```
-sudo gunicorn -b 120.126.16.88:17777 -k gevent -w 32 eserver:app
+sudo gunicorn -b 0.0.0.0:17777 -k gevent -w 32 eserver:app
 ```
 
 # 啟動 dbmanager
@@ -130,7 +130,7 @@ cluster.initial_master_nodes: ["120-126-16-88-node"]
 -Xmx2g
 ```
 
-## Command
+## Command for elasticsearch service
 
 
 ```
