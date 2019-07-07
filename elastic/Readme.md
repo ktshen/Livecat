@@ -1,16 +1,13 @@
 # 啟動eserver
 ```
-sudo gunicorn -b 0.0.0.0:17777 -k gevent -w 32 eserver:app
+sudo gunicorn -b 0.0.0.0:17777 -k gevent -w 33 eserver:app
 ```
+- w參數是根據CPU而定，value = (CPU數\*2 + 1)，若cpu有16個那就設16\*2+1=33個
 
 # 啟動 dbmanager
 ```
 python3 dbmanager.py
 ```
-
-# 啟動elastic docker
-`sudo docker-compose -f elastic-docker.yml up`
-
 
 
 # Elasticsearch Install and Configure
@@ -115,11 +112,12 @@ path.data: /var/lib/elasticsearch
 path.logs: /var/log/elasticsearch
 bootstrap.memory_lock: true
 network.host: 0.0.0.0
-# host external ip
+# host external ip 該主機的IP
 network.publish_host: 120.126.16.88
 http.port: 9200
 # Add every node's ip and name to the following fields
 discovery.seed_hosts: ["120.126.16.88"]
+# 若是初次建起一個新的cluster才需要該行，不然若只是一個新的node要加入，提供seed_hosts即可
 cluster.initial_master_nodes: ["120-126-16-88-node"]
 ```
 
@@ -129,6 +127,8 @@ cluster.initial_master_nodes: ["120-126-16-88-node"]
 -Xms2g
 -Xmx2g
 ```
+
+- 假若新的node要加入cluster卻有問題，先刪掉並重新建一個新的path.data路徑（記得設定權限），再試試看
 
 ## Command for elasticsearch service
 
