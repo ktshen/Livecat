@@ -164,7 +164,10 @@ curl -X PUT "localhost:9200/livestreams" -H 'Content-Type: application/json' -d'
 ```
 
 # Install Kibana
+
 [Reference](https://www.elastic.co/guide/en/kibana/7.1/deb.html#install-deb)
+
 Kibana版本必須要和elasticsearch一致（該專案用7.1.1)
+
 若非用最新版本，請用dpkg安裝，若用apt則會自動到更新到最新的版本
 
