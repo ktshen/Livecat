@@ -163,3 +163,8 @@ curl -X GET "localhost:9200/_cluster/health?pretty"
 curl -X PUT "localhost:9200/livestreams" -H 'Content-Type: application/json' -d' { "settings" : { "index" : { "number_of_shards" : 3, "number_of_replicas" : 1 } } , "mappings" : { "properties" : { "timestamp" : { "type" : "date" } , "published" : { "type" : "date" } , "click_through" : { "type" : "integer" } , "viewers" : { "type" : "integer" } , "viewcount" : { "type" : "integer" } , "popular_rate": { "type" : "integer" } } } } '
 ```
 
+# Install Kibana
+[Reference](https://www.elastic.co/guide/en/kibana/7.1/deb.html#install-deb)
+Kibana版本必須要和elasticsearch一致（該專案用7.1.1)
+若非用最新版本，請用dpkg安裝，若用apt則會自動到更新到最新的版本
+
