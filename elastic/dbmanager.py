@@ -181,14 +181,14 @@ class ManageHomePageStreamsDisplayThread(threading.Thread):
         self.daemon = True
 
     def run(self):
-        try:
-            while True:
-                try:
-                    r = requests.get(KEYWORD_LIST_URL)
-                    keywords = json.loads(r.content)['keyword']
-                except requests.exceptions.ConnectionError:
-                    logfunc("Can't connect to ", KEYWORD_LIST_URL)
-                    keywords = []
+        while True:
+            try:
+                r = requests.get(KEYWORD_LIST_URL)
+                keywords = json.loads(r.content)['keyword']
+            except (requests.exceptions.ConnectionError, json.decoder.JSONDecodeError):
+                logfunc("Can't connect to ", KEYWORD_LIST_URL)
+                keywords = []
+            try:
                 if len(keywords):
                     keyword_dic = {}
                     for k in keywords:
@@ -213,10 +213,12 @@ class ManageHomePageStreamsDisplayThread(threading.Thread):
 
                 with open(KEYWORD_RESULTS_TEXT_FILE, "w") as f:
                     json.dump(keyword_results, f)
-                time.sleep(0)
-        except KeyboardInterrupt:
-            pass
-
+                    logfunc("Update ", KEYWORD_RESULTS_TEXT_FILE)
+                time.sleep(3)
+            except KeyboardInterrupt:
+                break
+            except Exception as e:
+                logfunc(e)
 
 expirethread = ExpireDataThread()
 expirethread.start()

@@ -69,7 +69,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "title": {
                                 "query": q,
-                                "boost": 4,
+                                "boost": 3,
                                 "minimum_should_match": "90%",
                             }
                         }
@@ -84,7 +84,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "tags": {
                                 "query": q,
-                                "boost": 3,
+                                "boost": 4,
                                 "minimum_should_match": "80%",
                             }
                         }
