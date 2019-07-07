@@ -4,3 +4,5 @@ compared*
 __pycache__/
 chromedriver*
 diff_img.png
+keywords_in_front_page.txt
+cysignals_crash_logs/
