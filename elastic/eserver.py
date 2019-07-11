@@ -10,6 +10,10 @@ from pyfasttext import FastText
 import re
 import emoji
 import langid
+import requests
+import random
+
+KEYWORD_RESULTS_TEXT_FILE = "keywords_in_front_page.txt"
 
 # wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 model = FastText('lid.176.bin')
@@ -65,7 +69,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "title": {
                                 "query": q,
-                                "boost": 2,
+                                "boost": 3,
                                 "minimum_should_match": "90%",
                             }
                         }
@@ -88,7 +92,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "host": {
                                 "query": q,
-                                "boost": 4,
+                                "boost": 2,
                                 "minimum_should_match": "80%",
                             }
                         }
@@ -96,7 +100,7 @@ def query_elastic(q, fr=0, sz=50):
                         "match": {
                             "platform": {
                                 "query": q,
-                                "boost": 3,
+                                "boost": 1,
                                 "minimum_should_match": "80%",
                             }
                         }
@@ -113,7 +117,7 @@ def query_elastic(q, fr=0, sz=50):
                 "match_phrase": {
                     "title": {
                         "query": q,
-                        "boost": 2,
+                        "boost": 4,
                         "slop": int(len(q) * 0.4) + 1
                     }
                 }
@@ -128,7 +132,7 @@ def query_elastic(q, fr=0, sz=50):
                 "match_phrase": {
                     "tags": {
                         "query": q,
-                        "boost": 4,
+                        "boost": 3,
                         "slop": int(len(q) * 0.2) + 1
                     }
                 }
@@ -136,7 +140,7 @@ def query_elastic(q, fr=0, sz=50):
                 "match_phrase": {
                     "host": {
                         "query": q,
-                        "boost": 4,
+                        "boost": 2,
                         "slop": int(len(q) * 0.2) + 1
                     }
                 }
@@ -144,7 +148,7 @@ def query_elastic(q, fr=0, sz=50):
                 "match_phrase": {
                     "platform": {
                         "query": q,
-                        "boost": 3,
+                        "boost": 1,
                         "slop": int(len(q) * 0.4) + 1
                     }
                 }
@@ -273,6 +277,33 @@ def get_parameters_from_url(request):
     return parse_qs(parsed.query)
 
 
+def get_random_streams(fr=0, sz=30):
+    body = {
+        "from": fr,
+        "size": sz,
+        "query": {
+            "function_score": {
+                "query": {
+                    "bool": {
+                        "filter": [
+                            {"match_phrase": {"status": "live"}},
+                        ],
+                    }
+                },
+                "random_score": {
+                    "seed": str(int(time.mktime(datetime.now().timetuple()))),
+                    "field": "_seq_no"
+                },
+                "boost": "5",
+                "boost_mode": "replace"
+            }
+        }
+    }
+
+    return es_search(body=body)
+
+
+
 @app.route("/", methods=['GET'])
 def search():
     qs = get_parameters_from_url(request)
@@ -365,7 +396,7 @@ def update_videos_click_through():
     else:
         res = es_update(_id=res["hits"]["hits"][0]["_id"],
                         body={"script": {
-                            "source": "if(ctx._source.containsKey(\"click_through\")){ctx._source.click_through+=params.count} else{ctx._source.click_through=1}",
+                            "source": "if(ctx._source.containsKey(\"click_through\")){ctx._source.s+=params.count} else{ctx._source.click_through=1}",
                             "lang": "painless",
                             "params": {
                                 "count": 1
@@ -514,30 +545,7 @@ def get_top_viewers():
 
 @app.route("/home_page", methods=['GET'])
 def home_page():
-    body = {
-        "from": 0,
-        "size": 30,
-        "query": {
-            "function_score": {
-                "query": {
-                    "bool": {
-                        "filter": [
-                            {"match_phrase": {"status": "live"}},
-                        ],
-                    }
-                },
-                "random_score": {
-                    "seed": str(int(time.mktime(datetime.now().timetuple()))),
-                    "field": "_seq_no"
-                },
-                "boost": "5",
-                "boost_mode": "replace"
-            }
-        }
-    }
-
-    results = es_search(body=body)
-
+    results = get_random_streams()
     response = {"subscriptions": results["hits"]["hits"][0:4],  # Subscriptions
                 "upcoming": results["hits"]["hits"][4:5],       # Upcoming Stream
                 "recommended": results["hits"]["hits"][5:9],    # Recommended
@@ -579,3 +587,10 @@ def home_page():
     response["hot"] = results["hits"]["hits"][0:4]
 
     return jsonify(response)
+
+
+@app.route("/cover_page", methods=['GET'])
+def cover_page():
+    with open(KEYWORD_RESULTS_TEXT_FILE, "r") as f:
+        results = json.load(f)
+    return jsonify(results)
