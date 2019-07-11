@@ -146,6 +146,9 @@ func (seventeenRepo *seleniumSeventeenRepository) getThumbnails(s *goquery.Selec
 func (seventeenRepo *seleniumSeventeenRepository) getViewers(s *goquery.Selection) (int, error) {
 	viewersStr := s.Find("a").Find("span.Msg-eAZFzz").Text()
 	viewersStr = strings.Replace(viewersStr, ",", "", -1)
+	if viewersStr == "ON AIR" {
+		return 0, nil
+	}
 	viewers, atoiErr := strconv.Atoi(viewersStr)
 	return viewers, atoiErr
 }

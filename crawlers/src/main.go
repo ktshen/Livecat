@@ -30,6 +30,6 @@ func main() {
 		ConfigType:     *configType,
 		ConfigPath:     *configPath,
 	}
+	// go controller.StreamerNotification()
 	controller.Init()
-	// controller.StreamerNotification()
 }
