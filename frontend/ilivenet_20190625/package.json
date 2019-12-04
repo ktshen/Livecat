@@ -20,7 +20,7 @@
     "express-session": "^1.15.6",
     "firebase-admin": "^7.1.0",
     "http-errors": "~1.6.2",
-    "mongoose": "^5.4.17",
+    "mongoose": "^5.7.5",
     "mongoose-multi": "^0.4.6",
     "mongoose-paginate": "^5.0.3",
     "mongoose-paginate-v2": "^1.0.23",
