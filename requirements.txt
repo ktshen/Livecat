@@ -27,7 +27,7 @@ imagesize==1.1.0
 itsdangerous==1.1.0
 langdetect==1.0.7
 langid==1.1.6
-nltk==3.4.1
+nltk==3.4.5
 oauth==1.0.1
 packaging==19.0
 parsedatetime==2.4
