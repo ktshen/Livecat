@@ -34,7 +34,7 @@ parsedatetime==2.4
 pipupgrade==1.5.0
 pyfasttext==0.4.6
 pyflakes==2.1.1
-Pygments==2.4.0
+Pygments==2.7.4
 pygobject==3.26.1
 pymongo==3.8.0
 python-apt==1.6.4
