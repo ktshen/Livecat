@@ -18,7 +18,7 @@
     "express-ejs-layouts": "^2.5.0",
     "express-partials": "^0.3.0",
     "express-session": "^1.15.6",
-    "firebase-admin": "^7.1.0",
+    "firebase-admin": "^11.4.1",
     "http-errors": "~1.6.2",
     "mongoose": "^5.4.17",
     "mongoose-multi": "^0.4.6",
